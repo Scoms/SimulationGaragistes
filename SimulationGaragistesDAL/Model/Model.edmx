@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SimulationGaragistesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Franchises">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="label" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Garagistes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nom" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="franchise_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Garagistes_Franchise">
+          <End Role="Franchises" Type="Self.Franchises" Multiplicity="1" />
+          <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Franchises">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Garagistes">
+              <PropertyRef Name="franchise_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SimulationGaragistesModelStoreContainer">
+          <EntitySet Name="Franchises" EntityType="Self.Franchises" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Garagistes" EntityType="Self.Garagistes" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Garagistes_Franchise" Association="Self.FK_Garagistes_Franchise">
+            <End Role="Franchises" EntitySet="Franchises" />
+            <End Role="Garagistes" EntitySet="Garagistes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SimulationGaragistesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Garagistes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="franchise_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Franchises" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Garagistes" ToRole="Franchises" />
+        </EntityType>
+        <EntityContainer Name="SimulationGaragistesEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Garagistes" EntityType="Self.Garagistes" />
+          <EntitySet Name="Franchises" EntityType="SimulationGaragistesModel.Franchises" />
+          <AssociationSet Name="FK_Garagistes_Franchise" Association="SimulationGaragistesModel.FK_Garagistes_Franchise">
+            <End Role="Franchises" EntitySet="Franchises" />
+            <End Role="Garagistes" EntitySet="Garagistes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Franchises">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Franchises" ToRole="Garagistes" />
+        </EntityType>
+        <Association Name="FK_Garagistes_Franchise">
+          <End Type="SimulationGaragistesModel.Franchises" Role="Franchises" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Franchises">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Garagistes">
+              <PropertyRef Name="franchise_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SimulationGaragistesModelStoreContainer" CdmEntityContainer="SimulationGaragistesEntities">
+          <EntitySetMapping Name="Garagistes">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Garagistes">
+              <MappingFragment StoreEntitySet="Garagistes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="franchise_id" ColumnName="franchise_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Franchises">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Franchises">
+              <MappingFragment StoreEntitySet="Franchises">
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

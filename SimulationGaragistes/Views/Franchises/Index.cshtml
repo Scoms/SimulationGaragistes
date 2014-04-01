@@ -1,0 +1,31 @@
+﻿@using SimulationGaragistesDAL.Model
+
+<h1>Liste des Franchises</h1>
+
+@Html.Partial("Menu")
+
+<p>@TempData["success"]</p>
+@Html.ValidationMessage("error")
+
+<table>
+    <tr>
+        <th>Franchise</th>
+    </tr>
+    @foreach (Franchises franchise in (List<Franchises>)ViewData["lFranchises"])
+        {
+            <tr>
+                <td>@franchise.label</td>
+                <td>@Html.ActionLink("Modifier", "Insert", "Franchises", new
+                   {
+                       id = @franchise.id
+                   },null)
+                </td>
+                <td>@Html.ActionLink("Supprimer", "Delete", "Franchises", new
+                   {
+                       id = @franchise.id
+                   }, null)
+                </td>
+            </tr>
+        }
+</table>
+

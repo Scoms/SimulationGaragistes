@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationGaragistes", "SimulationGaragistes\SimulationGaragistes.csproj", "{F0A09150-81D4-49E0-AC5B-D0208AEADA58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimlulationGaragistesService", "SimlulationGaragistesService\SimlulationGaragistesService.csproj", "{C0059678-F604-411F-A6EB-0C2969C51180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationGaragistesRepository", "SimulationGaragistesRepository\SimulationGaragistesRepository.csproj", "{90E7B66F-3E80-45DD-BD59-FE73ECFBA7ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationGaragistesDAL", "SimulationGaragistesDAL\SimulationGaragistesDAL.csproj", "{FA29F809-0E3C-4A7F-9FF6-24021628C691}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{AF65C4F0-2867-47B8-95FD-7AA60FA9A6B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DD2C66FF-D9E6-4B6E-A74D-58763501A25E}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enumerations", "Enumerations\Enumerations.csproj", "{F93C12B3-4F94-4245-B5CC-DC726BB1DBB8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0A09150-81D4-49E0-AC5B-D0208AEADA58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A09150-81D4-49E0-AC5B-D0208AEADA58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A09150-81D4-49E0-AC5B-D0208AEADA58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A09150-81D4-49E0-AC5B-D0208AEADA58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0059678-F604-411F-A6EB-0C2969C51180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0059678-F604-411F-A6EB-0C2969C51180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0059678-F604-411F-A6EB-0C2969C51180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0059678-F604-411F-A6EB-0C2969C51180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90E7B66F-3E80-45DD-BD59-FE73ECFBA7ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E7B66F-3E80-45DD-BD59-FE73ECFBA7ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E7B66F-3E80-45DD-BD59-FE73ECFBA7ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E7B66F-3E80-45DD-BD59-FE73ECFBA7ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA29F809-0E3C-4A7F-9FF6-24021628C691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA29F809-0E3C-4A7F-9FF6-24021628C691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA29F809-0E3C-4A7F-9FF6-24021628C691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA29F809-0E3C-4A7F-9FF6-24021628C691}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF65C4F0-2867-47B8-95FD-7AA60FA9A6B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF65C4F0-2867-47B8-95FD-7AA60FA9A6B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF65C4F0-2867-47B8-95FD-7AA60FA9A6B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF65C4F0-2867-47B8-95FD-7AA60FA9A6B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93C12B3-4F94-4245-B5CC-DC726BB1DBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93C12B3-4F94-4245-B5CC-DC726BB1DBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93C12B3-4F94-4245-B5CC-DC726BB1DBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93C12B3-4F94-4245-B5CC-DC726BB1DBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

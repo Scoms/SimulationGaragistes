@@ -1,0 +1,18 @@
+﻿<h1>Listes des garagistes</h1>
+
+@model List<SimulationGaragistesDAL.Model.Garagistes>
+@Html.Partial("Menu");
+
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Franchise</th>
+    </tr>
+    @foreach (SimulationGaragistesDAL.Model.Garagistes garagiste in Model)
+    {
+        <tr>
+            <td>@garagiste.nom</td>
+            <td>@garagiste.Franchises</td>
+        </tr>
+    }
+</table>

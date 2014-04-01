@@ -1,0 +1,17 @@
+﻿@model SimulationGaragistesDAL.Model.Franchises
+
+<h1>Ajouter une franchise</h1>
+
+@Html.Partial("Menu")
+
+<p>@TempData["success"]</p>
+@using (Html.BeginForm("Insert","Franchises",FormMethod.Post) )
+{
+    @Html.ValidationMessage("error")
+    @TempData["message"]
+    @Html.Label("label")
+    @Html.TextBox("label",Model.label)
+    
+    string mod = Model.id  <= 0 ? "Ajouter" : "Modifier";
+    <input type="submit" value=@mod>
+}
