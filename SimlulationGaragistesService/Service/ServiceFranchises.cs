@@ -26,11 +26,5 @@ namespace SimlulationGaragistesService.Service
                 this._eh.addError("Le label de la franchises existe déjà.");
             }
         }
-        
-        override public void Delete(Franchises fran)
-        {
-            RepositoryFranchises repo = new RepositoryFranchises(this._eh);
-            repo.Delete(fran);
-        }
     }
 }

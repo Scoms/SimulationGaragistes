@@ -23,10 +23,19 @@ namespace SimlulationGaragistesService.Service
                 this._repo.Insert(obj);
             }
         }
+        public virtual void Edit(T obj)
+        {
+            this.ValidationTest(obj);
+
+            if (!this._eh.hasErrors())
+            {
+                this._repo.Edit(obj);
+            }
+        }
 
         virtual public void Delete(T obj)
         {
-            throw new NotImplementedException();
+            this._repo.Delete(obj);
         }
 
         public List<T> findAll()

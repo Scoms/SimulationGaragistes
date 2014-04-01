@@ -1,11 +1,10 @@
-﻿using SimulationGaragistesRepository.Interfaces;
+﻿using SimulationGaragistesDAL.Model;
+using SimulationGaragistesRepository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utils;
-using SimulationGaragistesDAL.Model;
+using System.Data.Entity;
 
 namespace SimulationGaragistesRepository.Repository
 {
@@ -15,15 +14,32 @@ namespace SimulationGaragistesRepository.Repository
 
         virtual public void Insert(T obj)
         {
-            throw new NotImplementedException();
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                context.Set<T>().Add(obj);
+                context.SaveChanges();
+            }
+        }
+
+        virtual public void Edit(T obj)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                context.Entry(obj).State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
 
         public virtual void Delete(T obj)
         {
-            throw new NotImplementedException();
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                context.Entry(obj).State = EntityState.Deleted;
+                context.SaveChanges();
+            }
         }
 
-        public List<T> findAll()
+        virtual public List<T> findAll()
         {
             using(SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {

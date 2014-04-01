@@ -10,6 +10,8 @@ namespace SimlulationGaragistesService.Interfaces
     interface IService<T>
     {
         void Insert(T obj);
+
+        void Edit(T obj);
         void Delete(T obj);
         void ValidationTest(T obj);
         List<T> findAll();

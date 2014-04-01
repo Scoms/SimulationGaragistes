@@ -45,7 +45,15 @@ namespace SimulationGaragistes.Controllers
             if (this.Request.HttpMethod == "POST")
             {
                 fran.label = this.Request.Form["label"];
-                this._service.Insert(fran);
+
+                if (id != -1)
+                {
+                    this._service.Edit(fran);
+                }
+                else
+                {
+                    this._service.Insert(fran);
+                }
                 if (this._eh.hasErrors())
                 {
                     ModelState.AddModelError("error", this._eh.getErrors());
