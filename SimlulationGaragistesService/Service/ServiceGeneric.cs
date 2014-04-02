@@ -38,19 +38,19 @@ namespace SimlulationGaragistesService.Service
             this._repo.Delete(obj);
         }
 
-        public List<T> findAll()
-        {
-            return this._repo.findAll();
-        }
-
         virtual public void ValidationTest(T obj)
         {
-            throw new NotImplementedException();
+            //Could be nothing 
         }
 
         public T findById(int Id)
         {
             return this._repo.findById(Id);
+        }
+
+        public List<T> findAll(List<string> lIncludes = null)
+        {
+            return this._repo.findAll(lIncludes);
         }
     }
 }

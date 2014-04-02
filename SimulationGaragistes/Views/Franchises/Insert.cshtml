@@ -5,10 +5,12 @@
 @Html.Partial("Menu")
 
 <p>@TempData["success"]</p>
+<br />
 @using (Html.BeginForm("Insert","Franchises",FormMethod.Post) )
 {
     @Html.ValidationMessage("error")
     @TempData["message"]
+    @Html.Hidden("id", Model.id);
     @Html.Label("label")
     @Html.TextBox("label",Model.label)
     

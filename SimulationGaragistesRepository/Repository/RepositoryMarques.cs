@@ -8,7 +8,7 @@ using Utils;
 
 namespace SimulationGaragistesRepository.Repository
 {
-    class RepositoryMarques : RepositoryGeneric<Marques>
+    public class RepositoryMarques : RepositoryGeneric<Marques>
     {
         public RepositoryMarques(ErrorHandler pEh)
         {

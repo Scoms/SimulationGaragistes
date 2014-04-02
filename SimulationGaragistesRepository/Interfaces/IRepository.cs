@@ -11,7 +11,8 @@ namespace SimulationGaragistesRepository.Interfaces
         void Insert(T obj);
         void Edit(T obj);
         void Delete(T obj);
-        List<T> findAll();
+        void ValidationTest(T obj);
+        List<T> findAll(List<string> lIncludes);
         T findById(int id);
     }
 }

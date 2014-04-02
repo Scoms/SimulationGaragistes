@@ -229,12 +229,16 @@
     <Content Include="Views\Franchises\Menu.cshtml" />
     <Content Include="Views\Franchises\Insert.cshtml" />
     <Content Include="Views\Franchises\Index.cshtml" />
+    <Content Include="Views\Marques\Index.cshtml" />
+    <Content Include="Views\Marques\Insert.cshtml" />
+    <Content Include="Views\Marques\Menu.cshtml" />
+    <Content Include="Views\Modeles\Index.cshtml" />
+    <Content Include="Views\Modeles\Insert.cshtml" />
+    <Content Include="Views\Modeles\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Generic\" />
-    <Folder Include="Views\Marques\" />
-    <Folder Include="Views\Modeles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

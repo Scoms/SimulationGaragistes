@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Utils;
 using SimlulationGaragistesService.Service;
 using SimulationGaragistesDAL.Model;
+using System.Net.Http;
 
 namespace SimulationGaragistes.Controllers
 {
@@ -27,6 +28,7 @@ namespace SimulationGaragistes.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult Insert(int id = -1)
         {
             Franchises fran = new Franchises();
@@ -42,37 +44,33 @@ namespace SimulationGaragistes.Controllers
                 }
             }
 
-            if (this.Request.HttpMethod == "POST")
-            {
-                fran.label = this.Request.Form["label"];
-
-                if (id != -1)
-                {
-                    this._service.Edit(fran);
-                }
-                else
-                {
-                    this._service.Insert(fran);
-                }
-                if (this._eh.hasErrors())
-                {
-                    ModelState.AddModelError("error", this._eh.getErrors());
-                }
-                else
-                {
-                    if (id <= 0)
-                    {
-                        TempData["success"] = "La franchise a bien été créée";
-                        // permet l'ajout en série de franchises
-                        fran = new Franchises();
-                    }
-                    else
-                    {
-                        TempData["success"] = "La franchise a bien été modifiée";                        
-                    }
-                }
-            }
             return View(fran);
+        }
+
+        [HttpPost]
+        public ActionResult Insert(Franchises fran)
+        {
+            //Franchises fran = id != -1 ? new Franchises() : this._service.findById(id);
+            string message = String.Empty;
+            if (fran.id != -1)
+            {
+                this._service.Edit(fran);
+                message = "La franchise a bien été modifiée";
+            }
+            //Insert
+            else
+            {
+                this._service.Insert(fran);
+                message = "La franchise a bien été créer";
+            }
+
+            if (this._eh.hasErrors())
+            {
+                ModelState.AddModelError("error", this._eh.getErrors());
+                return View(fran);
+            }
+            TempData["message"] = message;
+            return RedirectToAction("Insert");
         }
 
         public ActionResult Delete(int id)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimlulationGaragistesService.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,12 @@ namespace SimulationGaragistes.Controllers
         // GET: /Marques/
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult Insert()
+        {
+            //ServiceMarques service = new ServiceMarques();
             return View();
         }
 	}

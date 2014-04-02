@@ -8,6 +8,7 @@
 {
     @Html.ValidationMessage("error")
     @TempData["message"]
+    @Html.Hidden("id",Model.Garagiste.id)
     @Html.Label("nom")
     @Html.TextBox("nom", Model.Garagiste.nom)
     @Html.DropDownList("franchise",Model.lFranchises)

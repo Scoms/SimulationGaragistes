@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Utils;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace SimulationGaragistesRepository.Repository
 {
@@ -16,8 +17,12 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                context.Set<T>().Add(obj);
-                context.SaveChanges();
+                this.ValidationTest(obj);
+                if (!this._eh.hasErrors())
+                {
+                    context.Set<T>().Add(obj);
+                    context.SaveChanges();        
+                }
             }
         }
 
@@ -25,8 +30,12 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                context.Entry(obj).State = EntityState.Modified;
-                context.SaveChanges();
+                this.ValidationTest(obj);
+                if (!this._eh.hasErrors())
+                {
+                    context.Entry(obj).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
             }
         }
 
@@ -39,17 +48,32 @@ namespace SimulationGaragistesRepository.Repository
             }
         }
 
-        virtual public List<T> findAll()
+        virtual public List<T> findAll(List<String> pIncludes = null)
         {
             using(SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                return context.Set<T>().ToList();
+                IQueryable<T> query = null;  
+                query = context.Set<T>();
+                if(pIncludes != null)
+                {
+                    foreach (var param in pIncludes)
+                    {
+                        query = query.Include(param);
+                    }
+                }
+                var result = query.ToList();
+                return result;
             }
         }
 
         virtual public T findById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        virtual public void ValidationTest(T obj)
+        {
+            //could be nothing 
         }
     }
 }

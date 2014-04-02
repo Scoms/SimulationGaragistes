@@ -1,4 +1,5 @@
 ﻿using SimulationGaragistesDAL.Model;
+using SimulationGaragistesRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,17 @@ using Utils;
 
 namespace SimlulationGaragistesService.Service
 {
-    class ServiceMarques : ServiceGeneric<Marques>
+    public class ServiceMarques : ServiceGeneric<Marques>
     {
-        public ServiceMarques()
+        public ServiceMarques(ErrorHandler pEh)
         {
-            this._eh = new ErrorHandler();
+            this._eh = pEh;
+            this._repo = new RepositoryMarques(this._eh);
+        }
+
+        public override void Insert(Marques obj)
+        {
+            
         }
     }
 }

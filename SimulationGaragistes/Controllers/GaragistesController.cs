@@ -15,11 +15,14 @@ namespace SimulationGaragistes.Controllers
     {
         public ActionResult Index()
         {
+            List<string> lIncludes = new List<string>();
+            lIncludes.Add("Franchises");
             ServiceGaragistes service = new ServiceGaragistes(new ErrorHandler());
-            List<Garagistes> lGaragistes = service.findAll();
+            List<Garagistes> lGaragistes = service.findAll(lIncludes);
             return View(lGaragistes);
         }
 
+        [HttpGet]
         public ActionResult Insert(int id = -1)
         {
             //Init
@@ -27,8 +30,7 @@ namespace SimulationGaragistes.Controllers
             VMGaragistes vmGaragiste = new VMGaragistes();
             ServiceGaragistes serviceG = new ServiceGaragistes(eh);
             ServiceFranchises serviceF = new ServiceFranchises(eh);
-            Garagistes garagiste = new Garagistes();
-            List<Franchises> listFranchises = serviceF.findAll();
+            Garagistes garagiste = null;
 
             //Get garagiste
             if(id != -1)
@@ -41,42 +43,9 @@ namespace SimulationGaragistes.Controllers
                 garagiste = new Garagistes();
             }
 
-            if (this.Request.HttpMethod == Enums.HttpMethod.POST.ToString())
-            {
-                garagiste.nom = this.Request.Form["nom"];
-                //garagiste.franchise_id = int.Parse(this.Request.Form["franchise"]);
-                garagiste.Franchises = listFranchises.Find(l => l.id == int.Parse(this.Request.Form["franchise"]));
-
-                if (garagiste.id == 0)
-                {
-                    serviceG.Insert(garagiste);
-                }
-                else
-                {
-                    serviceG.Edit(garagiste);
-                }
-
-                if(eh.hasErrors())
-                {
-                    ModelState.AddModelError("error", eh.getErrors());
-                }
-                else
-                {
-                    if (garagiste.id != id)
-                    {
-                        TempData["success"] = "Le garagiste a bien été crée";
-                        garagiste = new Garagistes();
-                    }
-                    else
-                    {
-                        TempData["success"] = "Le garagiste a bien été modifié";
-                    }
-                }
-            }
-
             //Populate the VM
             vmGaragiste.lFranchises = new List<SelectListItem>();
-            
+            List<Franchises> listFranchises = serviceF.findAll();
             if(garagiste.Franchises != null)
             {
                 vmGaragiste.lFranchises.Add(new SelectListItem() { Text = garagiste.Franchises.label, Value = garagiste.Franchises.id.ToString() });
@@ -90,6 +59,49 @@ namespace SimulationGaragistes.Controllers
 
             vmGaragiste.Garagiste = garagiste;
             return View(vmGaragiste);
+        }
+
+        [HttpPost]
+        public ActionResult Insert(Garagistes garagiste)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceFranchises serviceF = new ServiceFranchises(eh);
+            ServiceGaragistes serviceG = new ServiceGaragistes(eh);
+            VMGaragistes vm = new VMGaragistes();
+            List<Franchises> listFranchises = serviceF.findAll();
+            string message = String.Empty;
+            garagiste.Franchises = listFranchises.Find(l => l.id == int.Parse(this.Request.Form["franchise"]));
+
+            if (garagiste.id == 0)
+            {
+                serviceG.Insert(garagiste);
+                message = "Le garagiste a bien été crée";
+            }
+            else
+            {
+                serviceG.Edit(garagiste);
+                message = "Le garagiste a bien été modifié";
+            }
+
+            if (eh.hasErrors())
+            {
+                ModelState.AddModelError("error", eh.getErrors());
+                vm.Garagiste = garagiste;
+                vm.lFranchises = new List<SelectListItem>();
+                if (garagiste.Franchises != null)
+                {
+                    vm.lFranchises.Add(new SelectListItem() { Text = garagiste.Franchises.label, Value = garagiste.Franchises.id.ToString() });
+                    listFranchises.Remove(listFranchises.Find(p => p.id == garagiste.Franchises.id));
+                }
+                //Fill franchises list
+                foreach (Franchises franchise in listFranchises)
+                {
+                    vm.lFranchises.Add(new SelectListItem() { Text = franchise.label, Value = franchise.id.ToString() });
+                }
+                return View(vm);
+            }
+            TempData["message"] = message;
+            return RedirectToAction("Insert");
         }
 
         public ActionResult Delete(int id){
