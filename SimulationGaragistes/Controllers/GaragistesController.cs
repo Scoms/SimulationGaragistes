@@ -69,7 +69,7 @@ namespace SimulationGaragistes.Controllers
                     }
                     else
                     {
-                        TempData["success"] = "Le garadiste a bien été modifié";
+                        TempData["success"] = "Le garagiste a bien été modifié";
                     }
                 }
             }

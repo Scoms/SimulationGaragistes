@@ -27,5 +27,7 @@ namespace SimulationGaragistesDAL.Model
     
         public DbSet<Garagistes> Garagistes { get; set; }
         public DbSet<Franchises> Franchises { get; set; }
+        public DbSet<Marques> Marques { get; set; }
+        public DbSet<Modeles> Modeles { get; set; }
     }
 }

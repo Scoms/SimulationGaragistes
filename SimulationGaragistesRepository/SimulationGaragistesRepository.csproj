@@ -55,6 +55,8 @@
     <Compile Include="Repository\RepositoryFranchises.cs" />
     <Compile Include="Repository\RepositoryGaragistes.cs" />
     <Compile Include="Repository\RepositoryGeneric.cs" />
+    <Compile Include="Repository\RepositoryMarques.cs" />
+    <Compile Include="Repository\RepositoryModeles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -39,8 +39,7 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                //context.Franchises.Attach(obj.Franchises);
-                //context.SaveChanges();
+                // bof moyen -> a revoir
                 obj.franchise_id = obj.Franchises.id;
                 context.Entry(obj).State = EntityState.Modified;
                 context.SaveChanges();

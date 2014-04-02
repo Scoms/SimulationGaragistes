@@ -55,6 +55,8 @@
     <Compile Include="Service\ServiceFranchises.cs" />
     <Compile Include="Service\ServiceGaragistes.cs" />
     <Compile Include="Service\ServiceGeneric.cs" />
+    <Compile Include="Service\ServiceMarques.cs" />
+    <Compile Include="Service\ServiceModeles.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SimulationGaragistesDAL\SimulationGaragistesDAL.csproj">

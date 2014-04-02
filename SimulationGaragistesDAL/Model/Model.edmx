@@ -20,6 +20,25 @@
           <Property Name="nom" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="franchise_id" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Marques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="label" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Erreurs détectées durant la génération :
+avertissement 6002: La table/vue 'SimulationGaragistes.dbo.Modeles' n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.-->
+        <EntityType Name="Modeles">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="label" />
+            <PropertyRef Name="marque_id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="label" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="marque_id" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Garagistes_Franchise">
           <End Role="Franchises" Type="Self.Franchises" Multiplicity="1" />
           <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="*" />
@@ -32,12 +51,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Modeles_Marques">
+          <End Role="Marques" Type="Self.Marques" Multiplicity="1" />
+          <End Role="Modeles" Type="Self.Modeles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Marques">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Modeles">
+              <PropertyRef Name="marque_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SimulationGaragistesModelStoreContainer">
           <EntitySet Name="Franchises" EntityType="Self.Franchises" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Garagistes" EntityType="Self.Garagistes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Marques" EntityType="Self.Marques" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Modeles" EntityType="Self.Modeles" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[Modeles].[id] AS [id], 
+[Modeles].[label] AS [label], 
+[Modeles].[marque_id] AS [marque_id]
+FROM [dbo].[Modeles] AS [Modeles]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_Garagistes_Franchise" Association="Self.FK_Garagistes_Franchise">
             <End Role="Franchises" EntitySet="Franchises" />
             <End Role="Garagistes" EntitySet="Garagistes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Modeles_Marques" Association="Self.FK_Modeles_Marques">
+            <End Role="Marques" EntitySet="Marques" />
+            <End Role="Modeles" EntitySet="Modeles" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -60,6 +103,12 @@
             <End Role="Franchises" EntitySet="Franchises" />
             <End Role="Garagistes" EntitySet="Garagistes" />
           </AssociationSet>
+          <EntitySet Name="Marques" EntityType="SimulationGaragistesModel.Marques" />
+          <EntitySet Name="Modeles" EntityType="SimulationGaragistesModel.Modeles" />
+          <AssociationSet Name="FK_Modeles_Marques" Association="SimulationGaragistesModel.FK_Modeles_Marques">
+            <End Role="Marques" EntitySet="Marques" />
+            <End Role="Modeles" EntitySet="Modeles" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Franchises">
           <Key>
@@ -81,6 +130,37 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Marques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Modeles" Relationship="SimulationGaragistesModel.FK_Modeles_Marques" FromRole="Marques" ToRole="Modeles" />
+        </EntityType>
+        <EntityType Name="Modeles">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="label" />
+            <PropertyRef Name="marque_id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="marque_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Marques" Relationship="SimulationGaragistesModel.FK_Modeles_Marques" FromRole="Modeles" ToRole="Marques" />
+        </EntityType>
+        <Association Name="FK_Modeles_Marques">
+          <End Type="SimulationGaragistesModel.Marques" Role="Marques" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Modeles" Role="Modeles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Marques">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Modeles">
+              <PropertyRef Name="marque_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -99,6 +179,23 @@
           <EntitySetMapping Name="Franchises">
             <EntityTypeMapping TypeName="SimulationGaragistesModel.Franchises">
               <MappingFragment StoreEntitySet="Franchises">
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Marques">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Marques">
+              <MappingFragment StoreEntitySet="Marques">
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Modeles">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Modeles">
+              <MappingFragment StoreEntitySet="Modeles">
+                <ScalarProperty Name="marque_id" ColumnName="marque_id" />
                 <ScalarProperty Name="label" ColumnName="label" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>

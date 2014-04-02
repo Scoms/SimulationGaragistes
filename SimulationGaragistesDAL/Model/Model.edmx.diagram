@@ -8,6 +8,9 @@
         <EntityTypeShape EntityType="SimulationGaragistesModel.Garagistes" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Franchises" Width="1.5" PointX="0.75" PointY="1" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Garagistes_Franchise" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Marques" Width="1.5" PointX="0.75" PointY="4" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Modeles" Width="1.5" PointX="3" PointY="3.875" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Modeles_Marques" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

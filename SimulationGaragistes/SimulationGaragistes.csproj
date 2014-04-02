@@ -166,6 +166,8 @@
     <Compile Include="Controllers\FranchisesController.cs" />
     <Compile Include="Controllers\GaragistesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MarquesController.cs" />
+    <Compile Include="Controllers\ModelesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,6 +233,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Generic\" />
+    <Folder Include="Views\Marques\" />
+    <Folder Include="Views\Modeles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
