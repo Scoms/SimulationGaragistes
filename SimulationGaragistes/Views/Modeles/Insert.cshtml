@@ -1,1 +1,17 @@
-﻿
+﻿<h1>Ajouter un modèle</h1>
+
+@model SimulationGaragistes.ViewModels.VMModeles
+@Html.Partial("Menu")
+<div>
+    @TempData["success"]
+</div>
+@using (Html.BeginForm("Insert", "Modeles", FormMethod.Post))
+{
+    @Html.ValidationMessage("error")
+    @Html.Hidden("id", Model.Modele.id)
+    @Html.TextBox("label", Model.Modele.label)
+    @Html.DropDownList("marque",Model.Marques)
+
+    string mod = Model.Modele.id == 0 ? "Ajouter" : "Modifier";
+    <input type="submit" value="@mod" />
+}

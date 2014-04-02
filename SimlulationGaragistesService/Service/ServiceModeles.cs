@@ -1,4 +1,5 @@
 ﻿using SimulationGaragistesDAL.Model;
+using SimulationGaragistesRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,15 @@ namespace SimlulationGaragistesService.Service
         public ServiceModeles(ErrorHandler pEh)
         {
             this._eh = pEh;
+            this._repo = new RepositoryModeles(this._eh);
+        }
+
+        public override void ValidationTest(Modeles obj)
+        {
+            if (obj.label == null)
+            {
+                this._eh.addError("Le modèle doit être identifié par un label");
+            }
         }
     }
 }

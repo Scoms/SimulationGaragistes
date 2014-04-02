@@ -36,7 +36,7 @@ namespace SimulationGaragistesRepository.Repository
              }
         }
 
-        public override void Edit(Garagistes obj)
+        public override void Edit(Garagistes obj, List<object> toAttach = null)
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {

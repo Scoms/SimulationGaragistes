@@ -11,7 +11,7 @@
         <EntityTypeShape EntityType="SimulationGaragistesModel.Marques" Width="1.5" PointX="0.75" PointY="4" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Modeles" Width="1.5" PointX="3" PointY="3.875" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Modeles_Marques" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -1,4 +1,17 @@
 ﻿<h1>Ajouter des marques</h1>
 
+@model SimulationGaragistesDAL.Model.Marques
 @Html.Partial("Menu")
+<div>
+    @TempData["success"]
+</div>
+@using(Html.BeginForm("Insert","Marques",FormMethod.Post))
+{
+    @Html.ValidationMessage("error")
+    @Html.Hidden("id",Model.id)
+    @Html.TextBox("label", Model.label)
+
+    string mod = Model.id == 0 ? "Ajouter" : "Modifier";
+    <input type="submit" value="@mod"/>
+}
 

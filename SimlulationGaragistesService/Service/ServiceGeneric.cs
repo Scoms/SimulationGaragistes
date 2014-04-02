@@ -23,13 +23,13 @@ namespace SimlulationGaragistesService.Service
                 this._repo.Insert(obj);
             }
         }
-        public virtual void Edit(T obj)
+        public virtual void Edit(T obj,List<object> toAttach = null)
         {
             this.ValidationTest(obj);
 
             if (!this._eh.hasErrors())
             {
-                this._repo.Edit(obj);
+                this._repo.Edit(obj,toAttach);
             }
         }
 

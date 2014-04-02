@@ -17,9 +17,12 @@ namespace SimlulationGaragistesService.Service
             this._repo = new RepositoryMarques(this._eh);
         }
 
-        public override void Insert(Marques obj)
+        public override void ValidationTest(Marques obj)
         {
-            
+            if (obj.label.Equals(String.Empty))
+            {
+                this._eh.addError("La marque doit etre identifiée par un nom");
+            }
         }
     }
 }

@@ -26,13 +26,14 @@ namespace SimulationGaragistesRepository.Repository
             }
         }
 
-        virtual public void Edit(T obj)
+        virtual public void Edit(T obj, List<object> toAttach = null)
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
                 this.ValidationTest(obj);
                 if (!this._eh.hasErrors())
                 {
+
                     context.Entry(obj).State = EntityState.Modified;
                     context.SaveChanges();
                 }

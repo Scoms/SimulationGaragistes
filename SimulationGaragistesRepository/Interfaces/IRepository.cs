@@ -9,7 +9,7 @@ namespace SimulationGaragistesRepository.Interfaces
     public interface IRepository<T>
     { 
         void Insert(T obj);
-        void Edit(T obj);
+        void Edit(T obj, List<object> toAttach);
         void Delete(T obj);
         void ValidationTest(T obj);
         List<T> findAll(List<string> lIncludes);

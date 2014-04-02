@@ -1,3 +1,21 @@
 ﻿<h1>Listes des Marques</h1>
-
+@model List<SimulationGaragistesDAL.Model.Marques>
 @Html.Partial("Menu")
+
+<table>
+    <tr>
+        <th>Marque</th>
+        <th></th>
+        <th></th>
+    </tr>
+    @{
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.label</td>
+                <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
+                <td>@Html.ActionLink("supprimer", "Delete",new { id = item.id },null)</td>
+            </tr>
+        }
+    }
+</table>
