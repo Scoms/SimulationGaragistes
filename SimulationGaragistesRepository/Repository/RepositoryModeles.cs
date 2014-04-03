@@ -40,5 +40,13 @@ namespace SimulationGaragistesRepository.Repository
                 }
             }
         }
+
+        public override Modeles findById(int id)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                return context.Modeles.Include("Marques").Where(m => m.id == id).FirstOrDefault();
+            }
+        }
     }
 }

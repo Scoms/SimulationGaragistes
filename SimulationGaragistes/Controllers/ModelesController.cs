@@ -65,14 +65,26 @@ namespace SimulationGaragistes.Controllers
             vm.Marques = new List<SelectListItem>();
             modele.Marques = serviceMarque.findAll().Find(m => m.id == int.Parse(this.Request.Form["marque"]));
             modele.marque_id = modele.Marques.id;
+            string message = String.Empty;
 
             if (modele.id != 0)
             {
                 serviceModele.Edit(modele);
+                message = "Le modèle à bien été modifié";
             }
             else
             {
                 serviceModele.Insert(modele);
+                message = "Le modèle à bien été ajouté";
+            }
+
+            if (eh.hasErrors())
+            {
+                ModelState.AddModelError("error", eh.getErrors());
+            }
+            else
+            {
+                TempData["success"] = message;
             }
             //Populate vm
             vm.Modele = modele;
@@ -86,7 +98,8 @@ namespace SimulationGaragistes.Controllers
                 bool selected = modele.Marques.id == item.id;
                 vm.Marques.Add(new SelectListItem() { Text = item.label, Value = item.id.ToString(), Selected = selected });
             }
-            return RedirectToAction("Insert");
+
+            return View(vm);
         }
 
         [HttpGet]
