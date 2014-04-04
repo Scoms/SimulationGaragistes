@@ -1,0 +1,19 @@
+﻿<h1>Ajouter une révision</h1>
+
+@model SimulationGaragistesDAL.Model.Révisions
+@Html.Partial("Menu")
+<div>
+    @TempData["success"]
+</div>
+@using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
+{
+    @Html.ValidationMessage("error")
+    @Html.Hidden("id", Model.id)
+    @Html.Hidden("modele_id", Model.modele_id)
+    @Html.TextBox("label", Model.label)
+    @Html.TextBox("km", Model.km == 0 ? 1 : Model.km)
+    @Html.TextBox("defaultTime", Model.defaultTime == 0 ? 1 : Model.defaultTime)
+
+    string mod = Model.id == 0 ? "Ajouter" : "Modifier";
+    <input type="submit" value="@mod" />
+}

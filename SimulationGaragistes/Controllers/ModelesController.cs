@@ -18,7 +18,7 @@ namespace SimulationGaragistes.Controllers
         {
             ErrorHandler eh = new ErrorHandler();
             ServiceModeles service = new ServiceModeles(eh);
-            List<Modeles> lModeles= service.findAll(new List<String>(){"Marques"});
+            List<Modeles> lModeles= service.findAll(new List<String>(){"Marques","Révisions"});
             return View(lModeles);
         }
 
@@ -28,6 +28,7 @@ namespace SimulationGaragistes.Controllers
             ErrorHandler eh = new ErrorHandler();
             ServiceModeles serviceModele = new ServiceModeles(eh);
             ServiceMarques serviceMarque = new ServiceMarques(eh);
+            
             Modeles modele = new Modeles();
             VMModeles vm = new VMModeles();
             vm.Marques = new List<SelectListItem>();
@@ -105,7 +106,33 @@ namespace SimulationGaragistes.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceModeles service = new ServiceModeles(eh);
+
+            Modeles modele = service.findById(id);
+            if (modele != null)
+            {
+                service.Delete(modele);
+            }
             return RedirectToAction("Index");
         }
-	}
+
+        [HttpGet]
+        public ActionResult seeRevisions(int id,string errors = null)
+        {
+            VMModeles vm = new VMModeles();
+            ErrorHandler eh = new ErrorHandler();
+            ServiceModeles serviceModeles = new ServiceModeles(eh);
+
+            vm.Modele = serviceModeles.findById(id);
+
+            vm.marqueLabel = vm.Modele.Marques.label;
+            vm.Revision = new Révisions();
+            
+            if(errors !=null)
+                ModelState.AddModelError("error", errors);
+            
+            return View(vm);
+        }
+    }
 }

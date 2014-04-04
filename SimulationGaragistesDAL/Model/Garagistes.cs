@@ -14,10 +14,16 @@ namespace SimulationGaragistesDAL.Model
     
     public partial class Garagistes
     {
+        public Garagistes()
+        {
+            this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
+        }
+    
         public int id { get; set; }
         public string nom { get; set; }
         public int franchise_id { get; set; }
     
         public virtual Franchises Franchises { get; set; }
+        public virtual ICollection<Revisions_Garagistes> Revisions_Garagistes { get; set; }
     }
 }

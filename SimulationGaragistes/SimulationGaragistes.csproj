@@ -168,6 +168,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MarquesController.cs" />
     <Compile Include="Controllers\ModelesController.cs" />
+    <Compile Include="Controllers\RévisionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -236,6 +237,10 @@
     <Content Include="Views\Modeles\Index.cshtml" />
     <Content Include="Views\Modeles\Insert.cshtml" />
     <Content Include="Views\Modeles\Menu.cshtml" />
+    <Content Include="Views\Révisions\Index.cshtml" />
+    <Content Include="Views\Révisions\Insert.cshtml" />
+    <Content Include="Views\Révisions\Menu.cshtml" />
+    <Content Include="Views\Modeles\seeRevisions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

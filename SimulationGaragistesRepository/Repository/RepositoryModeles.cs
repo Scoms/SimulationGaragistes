@@ -45,7 +45,7 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                return context.Modeles.Include("Marques").Where(m => m.id == id).FirstOrDefault();
+                return context.Modeles.Include("Marques").Include("Révisions").Where(m => m.id == id).FirstOrDefault();
             }
         }
     }

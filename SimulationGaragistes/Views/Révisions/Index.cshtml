@@ -1,13 +1,12 @@
-﻿<h1>Liste des modèles</h1>
+﻿<h1>Liste des révisions</h1>
 
-@model List<SimulationGaragistesDAL.Model.Modeles>
+@model List<SimulationGaragistesDAL.Model.Révisions>
 @Html.Partial("Menu")
 
 <table>
     <tr>
-        <th>Modele</th>
-        <th>Marque</th>
-        <th>Révisions</th>
+        <th>Révision</th>
+        <th>Durée par défault (en heure)</th>
         <th></th>
         <th></th>
     </tr>
@@ -16,11 +15,9 @@
         {
             <tr>
                 <td>@item.label</td>
-                <td>@item.Marques.label</td>
-                <td>@Html.ActionLink("(" + item.Révisions.Count() + ") révisions", "seeRevisions", new { id = item.id},null)</td>
+                <td>@item.defaultTime</td>
                 <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
                 <td>@Html.ActionLink("supprimer", "Delete", new { id = item.id }, null)</td>
-                <td></td>
             </tr>
         }
     }

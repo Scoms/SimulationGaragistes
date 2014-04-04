@@ -9,9 +9,12 @@
 {
     @Html.ValidationMessage("error")
     @Html.Hidden("id", Model.Modele.id)
+    @Html.Label("label_label","Nom du modèle")
     @Html.TextBox("label", Model.Modele.label)
+    <br />
+    @Html.Label("label_marque","Marque")
     @Html.DropDownList("marque",Model.Marques)
-
+    <br />
     string mod = Model.Modele.id == 0 ? "Ajouter" : "Modifier";
     <input type="submit" value="@mod" />
 }

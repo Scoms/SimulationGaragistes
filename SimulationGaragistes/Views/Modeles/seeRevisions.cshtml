@@ -1,0 +1,40 @@
+﻿@model SimulationGaragistes.ViewModels.VMModeles
+
+<h1>Liste des révision de @Model.marqueLabel - @Model.Modele.label</h1>
+
+<table>
+    <tr>
+        <th>Révision</th>
+        <th>km</th>
+        <th>durée par défault</th>
+        <th></th>
+        <th></th>
+    </tr>
+@foreach (var item in Model.Modele.Révisions)
+    {
+        <tr>
+            <td>@item.label</td>
+            <td>@item.km</td>
+            <td>@item.defaultTime</td>
+            <td>@Html.ActionLink("modifier","Insert","Révisions",new{ id = @item.id},null)</td>
+            <td>@Html.ActionLink("supprimer","Delete", "Révisions", new { id = @item.id }, null)</td>
+        </tr>
+    }
+
+
+ </table>
+
+@using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
+{ 
+    <input type="hidden" value="0" id="0" name="id" />
+    @Html.Hidden("modele_id",Model.Modele.id)
+    @Html.TextBox("label", Model.Revision.label)
+    @Html.TextBox("km", Model.Revision.km == null ? 1 : Model.Revision.km) 
+    @Html.TextBox("defaultTime", Model.Revision.defaultTime == 0 ? 1 : Model.Revision.defaultTime)
+    {
+        Model.Revision.modele_id = Model.Modele.id;
+    }
+    <input type="submit" value="Ajouter" />  
+}
+
+@Html.ValidationMessage("error")
