@@ -45,13 +45,10 @@
           <Property Name="modele_id" Type="int" />
           <Property Name="km" Type="int" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-avertissement 6002: La table/vue 'SimulationGaragistes.dbo.Revisions_Garagistes' n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.-->
         <EntityType Name="Revisions_Garagistes">
           <Key>
             <PropertyRef Name="garagiste_id" />
             <PropertyRef Name="revision_id" />
-            <PropertyRef Name="duree" />
           </Key>
           <Property Name="garagiste_id" Type="int" Nullable="false" />
           <Property Name="revision_id" Type="int" Nullable="false" />
@@ -127,13 +124,7 @@ avertissement 6002: La table/vue 'SimulationGaragistes.dbo.Revisions_Garagistes'
           <EntitySet Name="Marques" EntityType="Self.Marques" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Modeles" EntityType="Self.Modeles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Révisions" EntityType="Self.Révisions" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Revisions_Garagistes" EntityType="Self.Revisions_Garagistes" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-[Revisions_Garagistes].[garagiste_id] AS [garagiste_id], 
-[Revisions_Garagistes].[revision_id] AS [revision_id], 
-[Revisions_Garagistes].[duree] AS [duree]
-FROM [dbo].[Revisions_Garagistes] AS [Revisions_Garagistes]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Revisions_Garagistes" EntityType="Self.Revisions_Garagistes" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Garagistes_Franchise" Association="Self.FK_Garagistes_Franchise">
             <End Role="Franchises" EntitySet="Franchises" />
             <End Role="Garagistes" EntitySet="Garagistes" />
@@ -277,7 +268,6 @@ FROM [dbo].[Revisions_Garagistes] AS [Revisions_Garagistes]</DefiningQuery>
           <Key>
             <PropertyRef Name="garagiste_id" />
             <PropertyRef Name="revision_id" />
-            <PropertyRef Name="duree" />
           </Key>
           <Property Name="garagiste_id" Type="Int32" Nullable="false" />
           <Property Name="revision_id" Type="Int32" Nullable="false" />

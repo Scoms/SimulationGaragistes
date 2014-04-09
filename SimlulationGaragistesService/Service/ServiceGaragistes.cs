@@ -25,5 +25,26 @@ namespace SimlulationGaragistesService.Service
                 this._eh.addError("Le garagiste doit avoir un nom, comme toute personne normal d'ailleurs.");
             }
         }
+
+        public void ChangeDureeRevision(Revisions_Garagistes revGar)
+        {
+            if(revGar.revision_id == -1 || revGar.garagiste_id == -1)
+            {
+                this._eh.addError("Bizarre ..");
+            }
+            if (revGar.duree <= 0)
+            {
+                this._eh.addError("Durée non valide");
+            }
+            if(!this._eh.hasErrors())
+            {
+                ((RepositoryGaragistes)this._repo).ChangeDureeRevision(revGar);
+            }
+        }
+
+        public List<Révisions> GetRevisions(int id)
+        {
+           return ((RepositoryGaragistes)this._repo).GetRevisions(id);
+        }
     }
 }

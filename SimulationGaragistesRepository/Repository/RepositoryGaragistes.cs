@@ -69,5 +69,46 @@ namespace SimulationGaragistesRepository.Repository
                 }
             }
         }
+
+        public void ChangeDureeRevision(Revisions_Garagistes revGar)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                Revisions_Garagistes oldRev = context.Revisions_Garagistes.Where(
+                    r => r.garagiste_id == revGar.garagiste_id && 
+                        revGar.revision_id == r.revision_id).FirstOrDefault();
+
+                if (oldRev == null)
+                {
+                    revGar.Garagistes = context.Garagistes.Where(g => g.id == revGar.garagiste_id).FirstOrDefault();
+                    revGar.Révisions = context.Révisions.Where(g => g.id == revGar.revision_id).FirstOrDefault();
+                    context.Garagistes.Attach(revGar.Garagistes);
+                    context.Révisions.Attach(revGar.Révisions);
+                    //context.Revisions_Garagistes.Attach(revGar);
+                    context.Revisions_Garagistes.Add(revGar);
+                }
+                else
+                {
+                    oldRev.duree = revGar.duree;
+                    context.Entry(oldRev).State = EntityState.Modified;
+                }
+                context.SaveChanges();
+            }
+        }
+
+        public List<Révisions> GetRevisions(int idGaragiste)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                List<Révisions> res = context.Révisions.Include("Modeles").Include("Modeles.Marques").ToList();
+
+                foreach (var item in context.Revisions_Garagistes.Where(r => r.garagiste_id == idGaragiste).ToList())
+                {
+                    Révisions rev = res.Find(r => r.id == item.revision_id);
+                    rev.defaultTime = item.duree;
+                }
+                return res;
+            }
+        }
     }
 }

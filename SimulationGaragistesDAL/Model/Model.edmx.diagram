@@ -13,7 +13,7 @@
         <AssociationConnector Association="SimulationGaragistesModel.FK_Modeles_Marques" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Révisions" Width="1.5" PointX="5.75" PointY="3.875" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Révisions_Modeles" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Revisions_Garagistes" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Revisions_Garagistes" Width="1.5" PointX="8" PointY="2.625" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" />
         </Diagram>

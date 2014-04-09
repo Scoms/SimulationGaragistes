@@ -15,11 +15,21 @@ namespace SimulationGaragistesRepository.Repository
             this._eh = eh;
         }
 
+
         public override Révisions findById(int id)
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
                 return context.Révisions.Where(m => m.id == id).FirstOrDefault();
+            }
+        }
+
+        public override List<Révisions> findAll(List<string> pIncludes = null)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                List<Révisions> res = context.Révisions.Include("Modeles").Include("Modeles.Marques").ToList();
+                return res;
             }
         }
 
@@ -39,5 +49,6 @@ namespace SimulationGaragistesRepository.Repository
         {
             base.Insert(obj);
         }
+
     }
 }

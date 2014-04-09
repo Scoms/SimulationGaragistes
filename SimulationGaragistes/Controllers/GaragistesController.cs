@@ -122,5 +122,46 @@ namespace SimulationGaragistes.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public ActionResult ConfigureRevisions(int id)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceGaragistes serviceGaragiste = new ServiceGaragistes(eh);
+            ServiceRévisions serviceRevision = new ServiceRévisions(eh);
+
+            VMRevisions vm = new VMRevisions();
+            //List<Révisions> revSpéciales = serviceGaragiste.GetRevisions(id);
+
+            Garagistes garagiste = serviceGaragiste.findById(id);
+            if (garagiste == null)
+            {
+                return RedirectToAction("ConfigureRevisions",new{ id = id });   
+            }
+
+
+
+            vm.lRevisions = serviceGaragiste.GetRevisions(id);// serviceRevision.findAll(new List<string>() { "Modeles" });
+            vm.idGaragiste = garagiste.id;
+
+            return View(vm);
+        }
+
+        [HttpGet]
+        public ActionResult ChangeDureeRevision(int idGaragiste = -1, int idRevision = -1, int pDuree = -1)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceGaragistes service = new ServiceGaragistes(eh);
+            Revisions_Garagistes revGar = new Revisions_Garagistes();
+            revGar.duree = pDuree;
+            revGar.garagiste_id = idGaragiste;
+            revGar.revision_id = idRevision;
+            service.ChangeDureeRevision(revGar);
+            if(eh.hasErrors())
+            {
+                ModelState.AddModelError("error",eh.getErrors());
+            }
+            return RedirectToAction("ConfigureRevisions", new {id = idGaragiste });
+        }
     }
 }
