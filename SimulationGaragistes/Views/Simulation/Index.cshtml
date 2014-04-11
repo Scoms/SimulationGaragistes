@@ -1,0 +1,52 @@
+﻿@model SimulationGaragistes.ViewModels.VMSimulation
+
+<h1>Simulation</h1>
+
+<h2>Durée</h2>
+<p>
+    @Html.Label("Durée : ")
+    @Html.TextBox("nbJours",Model.nbJours)
+</p>
+
+<h2>Garagistes</h2>
+
+<table>
+    <tr>
+        <th>Garagiste</th>
+        <th>Franchise</th>
+        <th></th>
+    </tr>
+    @{
+        foreach (var item in Model.Garagistes)
+        {
+            <tr>
+                <td>@item.Garagiste.nom</td>
+                <td>@item.Garagiste.Franchises.label</td>
+                <td>@Html.CheckBox("garagiste" + item.Garagiste.id, @item.Comfirmed)</td>
+            </tr>
+        }
+    }
+</table>
+<p>
+    Vacances
+</p>
+
+<h2>Voitures</h2>
+<table>
+    <tr>
+        <th>Modèle</th>
+        <th>Marque</th>
+        <th>Nombre</th>
+    </tr>
+    @{
+        foreach (var item in Model.Modeles)
+        {
+            <tr>
+                <td>@item.Modele.label</td>
+                <td>@item.Modele.Marques.label</td>
+                <td>@Html.TextBox("modeles" + item.Modele.id,item.Quantite)</td>
+            </tr>
+        }
+    }
+</table>
+

@@ -169,6 +169,7 @@
     <Compile Include="Controllers\MarquesController.cs" />
     <Compile Include="Controllers\ModelesController.cs" />
     <Compile Include="Controllers\RévisionsController.cs" />
+    <Compile Include="Controllers\SimulationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -179,6 +180,7 @@
     <Compile Include="ViewModels\VMGaragistes.cs" />
     <Compile Include="ViewModels\VMModeles.cs" />
     <Compile Include="ViewModels\VMRevisions.cs" />
+    <Compile Include="ViewModels\VMSimulation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -243,6 +245,7 @@
     <Content Include="Views\Révisions\Menu.cshtml" />
     <Content Include="Views\Modeles\seeRevisions.cshtml" />
     <Content Include="Views\Garagistes\ConfigureRevisions.cshtml" />
+    <Content Include="Views\Simulation\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
