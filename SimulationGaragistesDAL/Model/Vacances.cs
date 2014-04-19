@@ -12,20 +12,18 @@ namespace SimulationGaragistesDAL.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Garagistes
+    public partial class Vacances
     {
-        public Garagistes()
+        public Vacances()
         {
-            this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
-            this.Vacances = new HashSet<Vacances>();
+            this.debut = DateTime.Now;
+            this.fin = DateTime.Now.AddDays(1);
         }
-    
         public int id { get; set; }
-        public string nom { get; set; }
-        public int franchise_id { get; set; }
+        public System.DateTime debut { get; set; }
+        public System.DateTime fin { get; set; }
+        public int garagiste_id { get; set; }
     
-        public virtual Franchises Franchises { get; set; }
-        public virtual ICollection<Revisions_Garagistes> Revisions_Garagistes { get; set; }
-        public virtual ICollection<Vacances> Vacances { get; set; }
+        public virtual Garagistes Garagistes { get; set; }
     }
 }

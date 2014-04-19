@@ -1,0 +1,51 @@
+﻿@model SimulationGaragistes.ViewModels.VMVacances
+
+@{
+    int count = 0;
+}
+<table>
+    <tr>
+        <th>Début</th>
+        <th>fin</th>
+        <th></th>
+    </tr>
+        @{
+            foreach (var item in Model.Garagiste.Vacances)
+            {
+                <tr>
+                    @using (Html.BeginForm("EditVacance", "Garagistes", FormMethod.Post))
+                    {   
+                        @Html.Hidden("Vacance.id",item.id)
+                        @Html.Hidden("Vacance.garagiste_id",item.garagiste_id)
+                        <td>@item.debut</td>
+                        <td>@item.fin</td>
+                        count++;
+                    }
+                    <td>@Html.ActionLink("Supprimer","DeleteVacance",new { id = item.id, idGaragiste = item.garagiste_id},null)</td>
+                </tr>
+            }
+        }
+    <tr>
+        @using(Html.BeginForm("addVacance","Garagistes",FormMethod.Post))
+        {
+            @Html.HiddenFor(m => Model.Vacance.garagiste_id)
+             <td>@Html.TextBox("Vacance.debut", Model.Vacance.debut, new { @class = "datepicker" })</td>
+             <td>@Html.TextBox("Vacance.fin", Model.Vacance.fin, new { @class = "datepicker" })</td>
+            <td><input type="submit" name="submit" value="Ajouter" /></td>
+        }
+
+    </tr>
+</table>
+@Html.ValidationMessage("error");
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$(".datepicker")[0].datepicker();
+        var list = $(".datepicker");
+
+        for (var i = 0; i < list.length; i++) {
+            var id = (list[i].getAttribute("id"));
+            $("#"+id).datepicker();
+        }
+     })
+</script>

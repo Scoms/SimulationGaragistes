@@ -163,5 +163,67 @@ namespace SimulationGaragistes.Controllers
             }
             return RedirectToAction("ConfigureRevisions", new {id = idGaragiste });
         }
+
+        [HttpGet]
+        public ActionResult ConfigureVacances(int id)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceGaragistes service = new ServiceGaragistes(eh);
+            Garagistes garagiste = service.findById(id);
+            VMVacances vm = new VMVacances();
+            vm.Garagiste = garagiste;
+            Vacances vacance = new Vacances();
+            vacance.garagiste_id = id;
+            vm.Vacance = vacance;
+
+            if (garagiste == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult AddVacance(Vacances vacance)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceVacances service = new ServiceVacances(eh);
+            service.Insert(vacance);
+            if (eh.hasErrors())
+            {
+                this.ModelState.AddModelError("error", eh.getErrors());
+            }
+            return RedirectToAction("ConfigureVacances", new { id = vacance.garagiste_id });
+
+        }
+
+        [HttpPost]
+        public ActionResult EditVacance(Vacances vacance)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceVacances service = new ServiceVacances(eh);
+            service.Edit(vacance);
+
+            vacance.fin = DateTime.Parse( this.Request.Params["vacance.finModif"]);
+
+            if (eh.hasErrors())
+            {
+                this.ModelState.AddModelError("error", eh.getErrors());
+                return RedirectToAction("ConfigureVacances", new { id = vacance.garagiste_id });
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+
+        public ActionResult DeleteVacance(int id, int idGaragiste)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceVacances service = new ServiceVacances(eh);
+            Vacances vacance = service.findById(id);
+            service.Delete(vacance);
+            return RedirectToAction("ConfigureVacances", new { id = idGaragiste });
+        }
     }
 }

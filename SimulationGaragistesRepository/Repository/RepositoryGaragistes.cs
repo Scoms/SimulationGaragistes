@@ -55,7 +55,7 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                return context.Garagistes.Include("Franchises").Where(g => g.id == id).FirstOrDefault();
+                return context.Garagistes.Include("Franchises").Include("Vacances").Where(g => g.id == id).FirstOrDefault();
             }
         }
         public override void ValidationTest(Garagistes garagiste)

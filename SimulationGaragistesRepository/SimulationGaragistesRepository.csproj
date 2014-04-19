@@ -58,6 +58,7 @@
     <Compile Include="Repository\RepositoryMarques.cs" />
     <Compile Include="Repository\RepositoryModeles.cs" />
     <Compile Include="Repository\RepositoryRevisions.cs" />
+    <Compile Include="Repository\RepositoryVacances.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

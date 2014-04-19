@@ -181,10 +181,13 @@
     <Compile Include="ViewModels\VMModeles.cs" />
     <Compile Include="ViewModels\VMRevisions.cs" />
     <Compile Include="ViewModels\VMSimulation.cs" />
+    <Compile Include="ViewModels\VMSimulationData.cs" />
+    <Compile Include="ViewModels\VMVacances.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery-ui-1.10.4.custom.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -195,6 +198,7 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -246,6 +250,8 @@
     <Content Include="Views\Modeles\seeRevisions.cshtml" />
     <Content Include="Views\Garagistes\ConfigureRevisions.cshtml" />
     <Content Include="Views\Simulation\Index.cshtml" />
+    <Content Include="Views\Simulation\startSimulation.cshtml" />
+    <Content Include="Views\Garagistes\ConfigureVacances.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

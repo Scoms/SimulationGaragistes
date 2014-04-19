@@ -11,6 +11,7 @@
         <th></th>
         <th></th>
         <th></th>
+        <th></th>
     </tr>
     @foreach (SimulationGaragistesDAL.Model.Garagistes garagiste in Model)
     {
@@ -33,6 +34,9 @@
                {
                    id = garagiste.id
                }, null)
+            </td>
+            <td>
+                @Html.ActionLink("configurer vacances", "ConfigureVacances", "Garagistes", new { id = garagiste.id},null)
             </td>
         </tr>
     }

@@ -31,5 +31,6 @@ namespace SimulationGaragistesDAL.Model
         public DbSet<Modeles> Modeles { get; set; }
         public DbSet<Révisions> Révisions { get; set; }
         public DbSet<Revisions_Garagistes> Revisions_Garagistes { get; set; }
+        public DbSet<Vacances> Vacances { get; set; }
     }
 }

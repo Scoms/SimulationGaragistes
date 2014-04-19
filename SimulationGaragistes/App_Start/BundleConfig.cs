@@ -9,7 +9,9 @@ namespace SimulationGaragistes
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-1.10.2.js"));
+                        "~/Scripts/jquery-1.10.2.min.js",
+                        "~/Scripts/jquery-ui-1.10.4.custom.min.js"
+                        ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -25,7 +27,8 @@ namespace SimulationGaragistes
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/jquery-ui-1.10.4.custom.min.css"));
         }
     }
 }

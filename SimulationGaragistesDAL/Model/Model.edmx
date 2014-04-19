@@ -54,6 +54,15 @@
           <Property Name="revision_id" Type="int" Nullable="false" />
           <Property Name="duree" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Vacances">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="debut" Type="date" Nullable="false" />
+          <Property Name="fin" Type="date" Nullable="false" />
+          <Property Name="garagiste_id" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Garagistes_Franchise">
           <End Role="Franchises" Type="Self.Franchises" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -118,6 +127,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Vacances_Garagistes">
+          <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="1" />
+          <End Role="Vacances" Type="Self.Vacances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Vacances">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SimulationGaragistesModelStoreContainer">
           <EntitySet Name="Franchises" EntityType="Self.Franchises" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Garagistes" EntityType="Self.Garagistes" Schema="dbo" store:Type="Tables" />
@@ -125,6 +146,7 @@
           <EntitySet Name="Modeles" EntityType="Self.Modeles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Révisions" EntityType="Self.Révisions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Revisions_Garagistes" EntityType="Self.Revisions_Garagistes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vacances" EntityType="Self.Vacances" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Garagistes_Franchise" Association="Self.FK_Garagistes_Franchise">
             <End Role="Franchises" EntitySet="Franchises" />
             <End Role="Garagistes" EntitySet="Garagistes" />
@@ -145,6 +167,10 @@
             <End Role="Modeles" EntitySet="Modeles" />
             <End Role="Révisions" EntitySet="Révisions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Vacances_Garagistes" Association="Self.FK_Vacances_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Vacances" EntitySet="Vacances" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -159,6 +185,7 @@
           <Property Name="franchise_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Franchises" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Garagistes" ToRole="Franchises" />
           <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Garagistes" ToRole="Revisions_Garagistes" />
+          <NavigationProperty Name="Vacances" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Garagistes" ToRole="Vacances" />
         </EntityType>
         <EntityContainer Name="SimulationGaragistesEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Garagistes" EntityType="Self.Garagistes" />
@@ -186,6 +213,11 @@
           <AssociationSet Name="FK_Revisions_Garagistes_Révisions" Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions">
             <End Role="Révisions" EntitySet="Révisions" />
             <End Role="Revisions_Garagistes" EntitySet="Revisions_Garagistes" />
+          </AssociationSet>
+          <EntitySet Name="Vacances" EntityType="SimulationGaragistesModel.Vacances" />
+          <AssociationSet Name="FK_Vacances_Garagistes" Association="SimulationGaragistesModel.FK_Vacances_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Vacances" EntitySet="Vacances" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Franchises">
@@ -299,6 +331,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Vacances">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="debut" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="fin" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Vacances" ToRole="Garagistes" />
+        </EntityType>
+        <Association Name="FK_Vacances_Garagistes">
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Vacances" Role="Vacances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Vacances">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -356,6 +410,16 @@
                 <ScalarProperty Name="duree" ColumnName="duree" />
                 <ScalarProperty Name="revision_id" ColumnName="revision_id" />
                 <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vacances">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Vacances">
+              <MappingFragment StoreEntitySet="Vacances">
+                <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
+                <ScalarProperty Name="fin" ColumnName="fin" />
+                <ScalarProperty Name="debut" ColumnName="debut" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
