@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationGaragistesDAL.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,20 +32,27 @@ namespace SimulationGaragistesDAL.Model
             this.rand = new Random();
             Thread.Sleep(SLEEPTIME);
             this.km = this.rand.Next(MIN_KM, MAX_KM);
+            this.prochaineRevision = this.getProchaineRevision();
+            
+        }
 
+        public Révisions getProchaineRevision()
+        {
+            Révisions res = new Révisions();
             bool revisionFounded = false;
             List<Révisions> lRevisions = this.modele.Révisions.OrderBy(r => r.km).ToList();
             foreach (Révisions revision in lRevisions)
             {
-                if (!revisionFounded && revision.km >= this.km)
+                if (!revisionFounded && revision.km > this.km)
                 {
-                    this.prochaineRevision = revision;
+                    res = revision;
                     revisionFounded = true;
                 }
             }
+            return res;
         }
 
-        public string Roule(DateTime date)
+        public string Roule(DateTime date, int indexJour)
         {
             // Week end (20-50) Semaine (50-100)
             string repport = String.Empty;
@@ -66,29 +74,47 @@ namespace SimulationGaragistesDAL.Model
 
             if(this.prochaineRevision.km <= this.km + dayKm)
             {
-                this.reserverIntervention(this.prochaineRevision);
-                repport = "Révision detecté";
+                this.km = (int)this.prochaineRevision.km;
+                VMIntervention vm = this.reserverIntervention(this.prochaineRevision,indexJour);
+                repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste,this,vm.Debut.Jour,vm.Debut.Heure,vm.Fin.Jour,vm.Fin.Heure);
+                this.prochaineRevision = this.getProchaineRevision();
             }
             else
             {
-
                 this.km += dayKm;
                 repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
             }
             return repport;
         }
 
-        private void reserverIntervention(Révisions revision)
+        private VMIntervention reserverIntervention(Révisions revision,int indexJour)
         {
+            VMIntervention vmInter = new VMIntervention();
+            vmInter.Fin = new Garagistes.Creneau();
+            vmInter.Debut = new Garagistes.Creneau();
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                List<Garagistes> lGaragistes = new List<Garagistes>();
+                bool estReserve = false;
+                List<Garagistes> lGaragistes = context.Garagistes.ToList();
                 foreach (Garagistes garagiste in lGaragistes)
                 {
-                    
-                }
+                    if (!estReserve)
+                    {
+                        // si le garagiste est libre ce jour
+                        if (garagiste.ProchaineDispo.Jour < indexJour)
+                        {
+                            garagiste.reserveJour(indexJour,revision);
+                            vmInter.Garagiste = garagiste;
+                            vmInter.JoursArrets = garagiste.ProchaineDispo.Heure == 1 ? garagiste.ProchaineDispo.Jour - indexJour : 0;
+                            vmInter.Fin = garagiste.ProchaineDispo;
 
+                            vmInter.Debut = vmInter.Debut;
+                            estReserve = true;
+                        }
+                    }
+                }
             }
+            return vmInter;
         }
 
         public override string ToString()

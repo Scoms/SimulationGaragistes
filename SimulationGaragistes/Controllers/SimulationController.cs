@@ -125,8 +125,7 @@ namespace SimulationGaragistes.Controllers
 
                 foreach (Voiture voiture in vmSimuData.lVoitures)
                 {
-
-                    repport.evenements.Add(voiture.Roule(currentDate));
+                    repport.evenements.Add(voiture.Roule(currentDate,i));
                 }
 
                 lRepports.Add(repport);
