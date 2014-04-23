@@ -1,0 +1,15 @@
+﻿@model System.Collections.Generic.List<SimulationGaragistes.ViewModels.VMSimulationData.DayRepport>
+
+<div id="dayRepport">
+    @{
+        foreach (var item in Model)
+        {
+            <h2>@item.jour.ToShortDateString() (Jour @item.indexJour)</h2>
+
+            foreach (var evenement in item.evenements)
+            {
+                <p>@evenement</p>
+            }
+        }
+    }
+</div>

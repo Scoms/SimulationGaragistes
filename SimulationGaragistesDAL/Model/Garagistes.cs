@@ -19,7 +19,7 @@ namespace SimulationGaragistesDAL.Model
             this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
             this.Vacances = new HashSet<Vacances>();
             this.ProchaineDispo = new Creneau();
-            this.ProchaineDispo.Jour = 1;
+            this.ProchaineDispo.Jour = 0;
             this.ProchaineDispo.Heure = 1;
         }
 
@@ -42,8 +42,11 @@ namespace SimulationGaragistesDAL.Model
             public int Jour { get; set; }
             public int Heure { get; set; }
 
-            internal void maj(int indexJour, int duree)
+            internal void maj(int indexJour, int duree, out Creneau debut)
             {
+                debut = new Creneau();
+                debut.Jour = indexJour;
+                debut.Heure = this.Heure;
                 //Si première resa
                 if (this.Jour < indexJour)
                 {
@@ -54,7 +57,7 @@ namespace SimulationGaragistesDAL.Model
             }
         }
     
-        internal void reserveJour(int indexJour,Révisions revision)
+        internal void reserveJour(int indexJour,Révisions revision, out Creneau debut)
         {
             int duree = revision.defaultTime;
             foreach (var item in this.Revisions_Garagistes)
@@ -64,12 +67,13 @@ namespace SimulationGaragistesDAL.Model
                     duree = item.duree;
                 }
             }
-            this.ProchaineDispo.maj(indexJour,duree);
+            this.ProchaineDispo.maj(indexJour,duree,out debut);
         }
 
         public override string ToString()
         {
             return this.nom;
         }
+
     }
 }

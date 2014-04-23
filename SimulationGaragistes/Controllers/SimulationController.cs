@@ -125,12 +125,48 @@ namespace SimulationGaragistes.Controllers
 
                 foreach (Voiture voiture in vmSimuData.lVoitures)
                 {
-                    repport.evenements.Add(voiture.Roule(currentDate,i));
+                    repport.evenements.Add(voiture.Roule(currentDate,i,vmSimuData.lGaragistes));
                 }
 
                 lRepports.Add(repport);
             }
             return View(lRepports);
+        }
+
+        [HttpGet]
+        public ActionResult Demo()
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceGaragistes serviceGaragiste = new ServiceGaragistes(eh);
+            ServiceModeles serviceModele = new ServiceModeles(eh);
+            VMSimulationData vmSimuData = new VMSimulationData();
+
+            //Durée
+            vmSimuData.debut = DateTime.Now;
+            vmSimuData.nbJours = 10;
+            
+            //1 garagiste
+            List<Garagistes> lGaragiste = new List<Garagistes>();
+            lGaragiste.Add(serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes","Vacances" }).FirstOrDefault());
+            
+            vmSimuData.lGaragistes = lGaragiste;
+
+            //2 voitures
+            List<Voiture> lVoiture = new List<Voiture>();
+            List<Modeles> lModeles = new List<Modeles>();
+            lModeles.Add(serviceModele.findAll(new List<string>(){"Révisions","Marques"}).FirstOrDefault());
+            foreach (var item in lModeles)
+            {
+                for (int i = 1; i <= 2; i++)
+                {
+                    Voiture voiture = new Voiture(item, i);
+                    voiture.km = 120000 - 1;
+                    lVoiture.Add(voiture);
+                }
+            }
+            vmSimuData.lVoitures = lVoiture;
+
+            return runSimulation(vmSimuData);
         }
 	}
 }

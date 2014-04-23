@@ -195,6 +195,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\datepicker_fr.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -252,6 +253,7 @@
     <Content Include="Views\Simulation\Index.cshtml" />
     <Content Include="Views\Simulation\startSimulation.cshtml" />
     <Content Include="Views\Garagistes\ConfigureVacances.cshtml" />
+    <Content Include="Views\Simulation\demo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

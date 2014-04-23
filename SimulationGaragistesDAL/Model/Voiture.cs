@@ -32,7 +32,8 @@ namespace SimulationGaragistesDAL.Model
             this.rand = new Random();
             Thread.Sleep(SLEEPTIME);
             this.km = this.rand.Next(MIN_KM, MAX_KM);
-            this.prochaineRevision = this.getProchaineRevision();
+            // A remmettre en prod  
+            //this.prochaineRevision = this.getProchaineRevision();
             
         }
 
@@ -40,20 +41,27 @@ namespace SimulationGaragistesDAL.Model
         {
             Révisions res = new Révisions();
             bool revisionFounded = false;
-            List<Révisions> lRevisions = this.modele.Révisions.OrderBy(r => r.km).ToList();
-            foreach (Révisions revision in lRevisions)
+            if (this.modele.Révisions != null)
             {
-                if (!revisionFounded && revision.km > this.km)
+                List<Révisions> lRevisions = this.modele.Révisions.OrderBy(r => r.km).ToList();
+                foreach (Révisions revision in lRevisions)
                 {
-                    res = revision;
-                    revisionFounded = true;
+                    if (!revisionFounded && revision.km > this.km)
+                    {
+                        res = revision;
+                        revisionFounded = true;
+                    }
                 }
+                return res;                   
             }
+            res.km = -1;
             return res;
         }
 
-        public string Roule(DateTime date, int indexJour)
+        public string Roule(DateTime date, int indexJour,List<Garagistes> lGaragistes)
         {
+            this.prochaineRevision = this.getProchaineRevision();
+
             // Week end (20-50) Semaine (50-100)
             string repport = String.Empty;
             int min, max = 0;
@@ -75,7 +83,7 @@ namespace SimulationGaragistesDAL.Model
             if(this.prochaineRevision.km <= this.km + dayKm)
             {
                 this.km = (int)this.prochaineRevision.km;
-                VMIntervention vm = this.reserverIntervention(this.prochaineRevision,indexJour);
+                VMIntervention vm = this.reserverIntervention(this.prochaineRevision,indexJour,lGaragistes);
                 repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste,this,vm.Debut.Jour,vm.Debut.Heure,vm.Fin.Jour,vm.Fin.Heure);
                 this.prochaineRevision = this.getProchaineRevision();
             }
@@ -87,7 +95,7 @@ namespace SimulationGaragistesDAL.Model
             return repport;
         }
 
-        private VMIntervention reserverIntervention(Révisions revision,int indexJour)
+        private VMIntervention reserverIntervention(Révisions revision,int indexJour,List<Garagistes> lGaragistes)
         {
             VMIntervention vmInter = new VMIntervention();
             vmInter.Fin = new Garagistes.Creneau();
@@ -95,21 +103,25 @@ namespace SimulationGaragistesDAL.Model
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
                 bool estReserve = false;
-                List<Garagistes> lGaragistes = context.Garagistes.ToList();
                 foreach (Garagistes garagiste in lGaragistes)
                 {
                     if (!estReserve)
                     {
                         // si le garagiste est libre ce jour
-                        if (garagiste.ProchaineDispo.Jour < indexJour)
+                        if (garagiste.ProchaineDispo.Jour <= indexJour)
                         {
-                            garagiste.reserveJour(indexJour,revision);
+                            SimulationGaragistesDAL.Model.Garagistes.Creneau Debut;
+                            garagiste.reserveJour(indexJour,revision,out Debut);
                             vmInter.Garagiste = garagiste;
                             vmInter.JoursArrets = garagiste.ProchaineDispo.Heure == 1 ? garagiste.ProchaineDispo.Jour - indexJour : 0;
                             vmInter.Fin = garagiste.ProchaineDispo;
-
-                            vmInter.Debut = vmInter.Debut;
+                            vmInter.Debut = Debut;
                             estReserve = true;
+                        }
+                        //Le garagiste doit cumuler un RDV 
+                        else
+                        {
+
                         }
                     }
                 }
