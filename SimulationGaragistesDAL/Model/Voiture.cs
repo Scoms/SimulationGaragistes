@@ -24,6 +24,8 @@ namespace SimulationGaragistesDAL.Model
         public int km { get; set; }
         public Modeles modele { get; set; }
 
+        private int nbJoursArrets = 0;
+
         public Voiture(Modeles pModele, int pId)
         {
             this.id = pId;
@@ -87,18 +89,30 @@ namespace SimulationGaragistesDAL.Model
             //Thread.Sleep(SLEEPTIME);
             dayKm = this.rand.Next(min,max);
 
-            if(this.prochaineRevision.km <= this.km + dayKm)
+            //si la voiture est arrété
+            if(nbJoursArrets > 0)
             {
-                this.km = (int)this.prochaineRevision.km;
-                VMIntervention vm = this.reserverIntervention(this.prochaineRevision,indexJour,lGaragistes);
-                repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste,this,vm.Debut.Jour,vm.Debut.Heure,vm.Fin.Jour,vm.Fin.Heure);
-                this.prochaineRevision = this.getProchaineRevision();
+                repport = String.Format("{0} n'a pas roulée, en réparation jusqu'au jour {1}", this.ToString(), indexJour + nbJoursArrets);
+                nbJoursArrets--;
             }
             else
             {
-                this.km += dayKm;
-                repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
+                if (this.prochaineRevision.km <= this.km + dayKm)
+                {
+                    this.km = (int)this.prochaineRevision.km;
+                    VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lGaragistes);
+                    repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                    this.prochaineRevision = this.getProchaineRevision();
+
+                    this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                }
+                else
+                {
+                    this.km += dayKm;
+                    repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
+                }
             }
+            
             return repport;
         }
 
@@ -115,34 +129,38 @@ namespace SimulationGaragistesDAL.Model
             Garagistes garagisteChoisi = new Garagistes();
             foreach (Garagistes garagiste in lGaragistes)
             {
-                if (!founded)
+                //Si le garagiste n'est pas en vacances
+                if(!garagiste.estEnVacances(indexJour))
                 {
-                    //Si premier passage dans la boucle 
-                    if (plusTot.Heure == -1)
+                    if (!founded)
                     {
-                        garagisteChoisi = garagiste;
-                        plusTot = garagiste.ProchaineDispo;
-                        //Si premier RDV de la journée, pas mieux 
-                        if(garagiste.ProchaineDispo.Jour < indexJour)
+                        //Si premier passage dans la boucle 
+                        if (plusTot.Heure == -1)
                         {
-                            plusTot.Jour = indexJour;
-                            founded = true;
-                        }
-                    }
-                    else
-                    {
-                        // Si le jour est plus tot ou équal
-                        if(garagiste.ProchaineDispo.Jour <= plusTot.Jour)
-                        {
-                            //Si l'heure est plus tot -> meilleur cas 
-                            if(garagiste.ProchaineDispo.Heure < plusTot.Heure)
+                            garagisteChoisi = garagiste;
+                            plusTot = garagiste.getProchaineDispo();
+                            //Si premier RDV de la journée, pas mieux 
+                            if (garagiste.getProchaineDispo().Jour < indexJour)
                             {
-                                garagisteChoisi = garagiste;
-                                plusTot = garagiste.ProchaineDispo;
-                                if (garagiste.ProchaineDispo.Jour < indexJour)
+                                plusTot.Jour = indexJour;
+                                founded = true;
+                            }
+                        }
+                        else
+                        {
+                            // Si le jour est plus tot ou équal
+                            if (garagiste.getProchaineDispo().Jour <= plusTot.Jour)
+                            {
+                                //Si l'heure est plus tot -> meilleur cas 
+                                if (garagiste.getProchaineDispo().Heure < plusTot.Heure)
                                 {
-                                    plusTot.Jour = indexJour;
-                                    founded = true;
+                                    garagisteChoisi = garagiste;
+                                    plusTot = garagiste.getProchaineDispo();
+                                    if (garagiste.getProchaineDispo().Jour < indexJour)
+                                    {
+                                        plusTot.Jour = indexJour;
+                                        founded = true;
+                                    }
                                 }
                             }
                         }
@@ -152,8 +170,8 @@ namespace SimulationGaragistesDAL.Model
             SimulationGaragistesDAL.Model.Garagistes.Creneau Debut;
             garagisteChoisi.reserveJour(indexJour, revision, out Debut);
             vmInter.Garagiste = garagisteChoisi;
-            vmInter.JoursArrets = garagisteChoisi.ProchaineDispo.Heure == 1 ? garagisteChoisi.ProchaineDispo.Jour - indexJour : 0;
-            vmInter.Fin = garagisteChoisi.ProchaineDispo;
+            vmInter.JoursArrets = garagisteChoisi.getProchaineDispo().Heure == 1 ? garagisteChoisi.getProchaineDispo().Jour - indexJour : 0;
+            vmInter.Fin = garagisteChoisi.getProchaineDispo();
             vmInter.Debut = Debut;
             
             return vmInter;

@@ -21,6 +21,7 @@ namespace SimulationGaragistesDAL.Model
             this.ProchaineDispo = new Creneau();
             this.ProchaineDispo.Jour = 0;
             this.ProchaineDispo.Heure = 1;
+            this.IndexVacances = new List<int>();
         }
 
     
@@ -33,8 +34,8 @@ namespace SimulationGaragistesDAL.Model
         public virtual ICollection<Vacances> Vacances { get; set; }
 
         //Champ supplémentaire [indexJour,Heure,Durée]
-        public virtual List<int[]> Agenda {get;set;}
-        public Creneau ProchaineDispo { get;set;}
+        private List<int> IndexVacances {get;set;}
+        private Creneau ProchaineDispo;
 
         // indexJour, heure
         public class Creneau
@@ -45,7 +46,7 @@ namespace SimulationGaragistesDAL.Model
             internal void maj(int indexJour, int duree, out Creneau debut)
             {
                 debut = new Creneau();
-                debut.Jour = indexJour;
+                debut.Jour = this.Jour;
                 debut.Heure = this.Heure;
                 //Si première resa
                 if (this.Jour < indexJour)
@@ -61,7 +62,35 @@ namespace SimulationGaragistesDAL.Model
                 }
             }
         }
-    
+
+        public Creneau getProchaineDispo()
+        {
+            return this.ProchaineDispo;
+        }
+
+        public void activerVacances(DateTime debutSimu)
+        {
+            //Vacances du monsieur
+            foreach (var item in this.Vacances)
+            {
+                var dif1 = item.debut.Date - debutSimu.Date;
+                var dif2 = item.fin.Date - debutSimu.Date;
+
+                for (int i = dif1.Days; i < dif2.Days; i++)
+                {
+                    this.IndexVacances.Add(i+1);
+                }
+            }
+
+            //Jour non travaillés de manière générale
+
+        }
+
+        public bool estEnVacances(int indexJour)
+        {
+            return this.IndexVacances.Contains(indexJour);
+        }
+
         internal void reserveJour(int indexJour,Révisions revision, out Creneau debut)
         {
             int duree = revision.defaultTime;

@@ -153,6 +153,7 @@ namespace SimulationGaragistes.Controllers
             {
                 if (nbGaragiste <= 2)
                 {
+                    item.activerVacances(vmSimuData.debut);
                     lGaragiste.Add(item);
                     nbGaragiste++;
                 }
@@ -175,6 +176,16 @@ namespace SimulationGaragistes.Controllers
             vmSimuData.lVoitures = lVoiture;
 
             return runSimulation(vmSimuData);
+            /**
+             * TODO :
+             *  Affiner les vacances pas commencer avant des vacances et finir pendant
+             *  gestion des weekends
+             *  fichier texte des logs
+             *  statistiques en BDD
+             *  
+             * Bonus :
+             * Gestion des pannes
+             **/
         }
 	}
 }
