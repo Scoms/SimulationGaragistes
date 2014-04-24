@@ -53,7 +53,12 @@ namespace SimulationGaragistesDAL.Model
                     this.Jour = indexJour;
                 }
                 this.Heure += duree;
-                // TEst sur le + que 8     
+                // TEst sur le + que 8
+                while(this.Heure > 8)
+                {
+                    this.Jour++;
+                    this.Heure -= 8;
+                }
             }
         }
     
@@ -72,7 +77,7 @@ namespace SimulationGaragistesDAL.Model
 
         public override string ToString()
         {
-            return this.nom;
+            return this.nom + "(" + this.Franchises.label + ")";
         }
 
     }

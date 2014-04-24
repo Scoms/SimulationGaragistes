@@ -147,7 +147,16 @@ namespace SimulationGaragistes.Controllers
             
             //1 garagiste
             List<Garagistes> lGaragiste = new List<Garagistes>();
-            lGaragiste.Add(serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes","Vacances" }).FirstOrDefault());
+
+            int nbGaragiste = 1;
+            foreach (var item in serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes", "Vacances","Franchises"}))
+            {
+                if (nbGaragiste <= 2)
+                {
+                    lGaragiste.Add(item);
+                    nbGaragiste++;
+                }
+            }
             
             vmSimuData.lGaragistes = lGaragiste;
 
@@ -157,10 +166,9 @@ namespace SimulationGaragistes.Controllers
             lModeles.Add(serviceModele.findAll(new List<string>(){"Révisions","Marques"}).FirstOrDefault());
             foreach (var item in lModeles)
             {
-                for (int i = 1; i <= 2; i++)
+                for (int i = 1; i <= 5; i++)
                 {
-                    Voiture voiture = new Voiture(item, i);
-                    voiture.km = 120000 - 1;
+                    Voiture voiture = new Voiture(item, i,29999);
                     lVoiture.Add(voiture);
                 }
             }
