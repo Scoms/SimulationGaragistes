@@ -3,6 +3,7 @@ using SimulationGaragistes.ViewModels;
 using SimulationGaragistesDAL.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -13,6 +14,7 @@ namespace SimulationGaragistes.Controllers
 {
     public class SimulationController : Controller
     {
+        private string filePath = "Logs/";
         private int NBJOURS_DEFAULT = 100;
         //
         // GET: /Simulation/
@@ -107,6 +109,9 @@ namespace SimulationGaragistes.Controllers
                     vmSimuData.lVoitures.Add(voiture);
 			    }
             }
+
+            vmSimuData.nom = pVmSimu.nom == String.Empty ? "sanstitre" : pVmSimu.nom;
+
             return runSimulation(vmSimuData);
         }
 
@@ -119,9 +124,9 @@ namespace SimulationGaragistes.Controllers
             {
                 VMSimulationData.DayRepport repport = new VMSimulationData.DayRepport();
                 repport.evenements = new List<string>();
+                currentDate.AddDays(i);
                 repport.jour = currentDate;
                 repport.indexJour = i;
-                currentDate.AddDays(1);
 
                 foreach (Voiture voiture in vmSimuData.lVoitures)
                 {
@@ -130,6 +135,24 @@ namespace SimulationGaragistes.Controllers
 
                 lRepports.Add(repport);
             }
+
+            //écriture dans le fichier
+            String rootPath = Server.MapPath("~");
+            FileStream fichier = System.IO.File.Create(rootPath + filePath + vmSimuData.nom);
+            fichier.Close();
+            StreamWriter file = new StreamWriter(rootPath + filePath + vmSimuData.nom,true);
+            file.Flush();
+            int i2 = 0;
+            foreach (var repport in lRepports)
+            {
+                file.WriteLine(repport.indexJour + " " + repport.jour.AddDays(i2).DayOfWeek);
+                foreach (var evenement in repport.evenements)
+                {
+                   file.WriteLine("  " + evenement);    
+                }
+                i2++;
+            }
+            file.Close();
             return View(lRepports);
         }
 
@@ -142,8 +165,9 @@ namespace SimulationGaragistes.Controllers
             VMSimulationData vmSimuData = new VMSimulationData();
 
             //Durée
-            vmSimuData.debut = DateTime.Now;
+            vmSimuData.debut = DateTime.Now.AddDays(1);
             vmSimuData.nbJours = 10;
+            vmSimuData.nom = "demo.txt";
             
             //1 garagiste
             List<Garagistes> lGaragiste = new List<Garagistes>();
@@ -151,9 +175,9 @@ namespace SimulationGaragistes.Controllers
             int nbGaragiste = 1;
             foreach (var item in serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes", "Vacances","Franchises"}))
             {
-                if (nbGaragiste <= 2)
+                if (nbGaragiste <= 1)
                 {
-                    item.activerVacances(vmSimuData.debut);
+                    item.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
                     lGaragiste.Add(item);
                     nbGaragiste++;
                 }
@@ -169,7 +193,7 @@ namespace SimulationGaragistes.Controllers
             {
                 for (int i = 1; i <= 5; i++)
                 {
-                    Voiture voiture = new Voiture(item, i,29999);
+                    Voiture voiture = new Voiture(item, i,119999);
                     lVoiture.Add(voiture);
                 }
             }
@@ -178,9 +202,6 @@ namespace SimulationGaragistes.Controllers
             return runSimulation(vmSimuData);
             /**
              * TODO :
-             *  Affiner les vacances pas commencer avant des vacances et finir pendant
-             *  gestion des weekends
-             *  fichier texte des logs
              *  statistiques en BDD
              *  
              * Bonus :

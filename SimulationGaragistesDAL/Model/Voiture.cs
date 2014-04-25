@@ -97,22 +97,50 @@ namespace SimulationGaragistesDAL.Model
             }
             else
             {
-                if (this.prochaineRevision.km <= this.km + dayKm)
+                if (nbJoursArrets == -1)
                 {
-                    this.km = (int)this.prochaineRevision.km;
+                    repport = String.Format("{0} n'a pas roulée, en attente de reservation pour une réparation", this.ToString());
+                    nbJoursArrets = 0;
                     VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lGaragistes);
-                    repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
-                    this.prochaineRevision = this.getProchaineRevision();
+                    if (vm.Garagiste.id == 0)
+                    {
+                        repport = String.Format("Pas de garagiste disponile pour {0}", this);
+                        this.nbJoursArrets = -1;
+                    }
+                    else
+                    {
+                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                        this.nbJoursArrets = vm.Fin.Jour - indexJour;
 
-                    this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                    }
                 }
                 else
                 {
-                    this.km += dayKm;
-                    repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
+                    if (this.prochaineRevision.km <= this.km + dayKm)
+                    {
+                        this.km = (int)this.prochaineRevision.km;
+                        VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lGaragistes);
+
+                        if (vm.Garagiste.id == 0)
+                        {
+                            repport = String.Format("Pas de garagiste disponile pour {0}", this);
+                            this.nbJoursArrets = -1;
+                        }
+                        else
+                        {
+                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                            this.nbJoursArrets = vm.Fin.Jour - indexJour;
+
+                        }
+                        this.prochaineRevision = this.getProchaineRevision();
+                    }
+                    else
+                    {
+                        this.km += dayKm;
+                        repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
+                    }
                 }
             }
-            
             return repport;
         }
 

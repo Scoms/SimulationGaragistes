@@ -11,6 +11,7 @@ namespace SimulationGaragistes.ViewModels
         public List<Garagistes> lGaragistes { get; set; }
         public List<Voiture> lVoitures { get; set; }
         public int nbJours { get; set; }
+        public string nom { get; set; }
         public DateTime debut { get; set; }
         public List<DayRepport> repports { get; set; }
 

@@ -43,7 +43,7 @@ namespace SimulationGaragistesDAL.Model
             public int Jour { get; set; }
             public int Heure { get; set; }
 
-            internal void maj(int indexJour, int duree, out Creneau debut)
+            internal void maj(int indexJour, int duree, out Creneau debut,Garagistes garagiste)
             {
                 debut = new Creneau();
                 debut.Jour = this.Jour;
@@ -58,7 +58,10 @@ namespace SimulationGaragistesDAL.Model
                 while(this.Heure > 8)
                 {
                     this.Jour++;
-                    this.Heure -= 8;
+                    if(!garagiste.estEnVacances(this.Jour))
+                    {
+                        this.Heure -= 8;
+                    }
                 }
             }
         }
@@ -68,7 +71,7 @@ namespace SimulationGaragistesDAL.Model
             return this.ProchaineDispo;
         }
 
-        public void activerVacances(DateTime debutSimu)
+        public void activerVacances(DateTime debutSimu,int nbJours)
         {
             //Vacances du monsieur
             foreach (var item in this.Vacances)
@@ -83,7 +86,14 @@ namespace SimulationGaragistesDAL.Model
             }
 
             //Jour non travaillés de manière générale
-
+            for (int i = 0; i <= nbJours; i++)
+            {
+                DayOfWeek dayOfWeek = debutSimu.AddDays(i).DayOfWeek;
+                if(dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Saturday)
+                {
+                    this.IndexVacances.Add(i+1);
+                }
+            }
         }
 
         public bool estEnVacances(int indexJour)
@@ -101,7 +111,7 @@ namespace SimulationGaragistesDAL.Model
                     duree = item.duree;
                 }
             }
-            this.ProchaineDispo.maj(indexJour,duree,out debut);
+            this.ProchaineDispo.maj(indexJour,duree,out debut,this);
         }
 
         public override string ToString()

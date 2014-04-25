@@ -8,6 +8,8 @@
     <h2>Durée</h2>
 
     <p>
+        @Html.Label("Nom : ")
+        @Html.TextBox("nom", Model.nom)
         @Html.Label("Début : ")
         @Html.TextBox("dateStart", Model.dateStart)
         @Html.Label("Durée : ")

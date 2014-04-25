@@ -8,10 +8,16 @@ namespace SimulationGaragistes.ViewModels
 {
     public class VMSimulation
     {
+        public VMSimulation()
+        {
+            this.nom = "test";
+        }
+
         public DateTime dateStart { get; set; }
         public int nbJours { get; set; }
         public List<GaragistesConf> GaragistesConfs { get; set; }
         public List<ModelesConf> ModelesConfs { get; set; }
+        public string nom { get; set; }
 
         public class GaragistesConf
         {
