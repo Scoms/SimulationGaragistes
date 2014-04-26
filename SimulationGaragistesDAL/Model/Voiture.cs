@@ -69,9 +69,10 @@ namespace SimulationGaragistesDAL.Model
             return res;
         }
 
-        public string Roule(DateTime date, int indexJour,List<Garagistes> lGaragistes)
+        public string Roule(DateTime date, int indexJour,List<VMGaragiste> lVMGaragistes, out Statistiques pStat)
         {
             // Week end (20-50) Semaine (50-100)
+            pStat = new Statistiques();
             string repport = String.Empty;
             int min, max = 0;
             int dayKm = 0;
@@ -101,17 +102,17 @@ namespace SimulationGaragistesDAL.Model
                 {
                     repport = String.Format("{0} n'a pas roulée, en attente de reservation pour une réparation", this.ToString());
                     nbJoursArrets = 0;
-                    VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lGaragistes);
-                    if (vm.Garagiste.id == 0)
+                    VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
+                    pStat = vm.Stat;
+                    if (vm.VMGaragiste.Garagiste.id == 0)
                     {
                         repport = String.Format("Pas de garagiste disponile pour {0}", this);
                         this.nbJoursArrets = -1;
                     }
                     else
                     {
-                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
                         this.nbJoursArrets = vm.Fin.Jour - indexJour;
-
                     }
                 }
                 else
@@ -119,16 +120,17 @@ namespace SimulationGaragistesDAL.Model
                     if (this.prochaineRevision.km <= this.km + dayKm)
                     {
                         this.km = (int)this.prochaineRevision.km;
-                        VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lGaragistes);
-
-                        if (vm.Garagiste.id == 0)
+                        VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
+                        pStat = vm.Stat;
+                        
+                        if (vm.VMGaragiste.Garagiste.id == 0)
                         {
-                            repport = String.Format("Pas de garagiste disponile pour {0}", this);
+                            repport = String.Format("Pas de garagiste disponible pour {0}", this);
                             this.nbJoursArrets = -1;
                         }
                         else
                         {
-                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.Garagiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
                             this.nbJoursArrets = vm.Fin.Jour - indexJour;
 
                         }
@@ -140,35 +142,36 @@ namespace SimulationGaragistesDAL.Model
                         repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
                     }
                 }
+                
             }
             return repport;
         }
 
-        private VMIntervention reserverIntervention(Révisions revision,int indexJour,List<Garagistes> lGaragistes)
+        private VMIntervention reserverIntervention(Révisions revision,int indexJour,List<VMGaragiste> lVMGaragistes)
         {
             VMIntervention vmInter = new VMIntervention();
-            vmInter.Fin = new Garagistes.Creneau();
-            vmInter.Debut = new Garagistes.Creneau();
-            Garagistes.Creneau plusTot = new Garagistes.Creneau();
+            vmInter.Fin = new VMGaragiste.Creneau();
+            vmInter.Debut = new VMGaragiste.Creneau();
+            VMGaragiste.Creneau plusTot = new VMGaragiste.Creneau();
             plusTot.Heure = -1;
+            Statistiques stat = new Statistiques();
 
-           
             bool founded = false;
-            Garagistes garagisteChoisi = new Garagistes();
-            foreach (Garagistes garagiste in lGaragistes)
+            VMGaragiste garagisteChoisi = new VMGaragiste(new Garagistes());
+            foreach (VMGaragiste vmGaragiste in lVMGaragistes)
             {
                 //Si le garagiste n'est pas en vacances
-                if(!garagiste.estEnVacances(indexJour))
+                if(!vmGaragiste.estEnVacances(indexJour))
                 {
                     if (!founded)
                     {
                         //Si premier passage dans la boucle 
                         if (plusTot.Heure == -1)
                         {
-                            garagisteChoisi = garagiste;
-                            plusTot = garagiste.getProchaineDispo();
+                            garagisteChoisi = vmGaragiste;
+                            plusTot = vmGaragiste.getProchaineDispo();
                             //Si premier RDV de la journée, pas mieux 
-                            if (garagiste.getProchaineDispo().Jour < indexJour)
+                            if (vmGaragiste.getProchaineDispo().Jour < indexJour)
                             {
                                 plusTot.Jour = indexJour;
                                 founded = true;
@@ -177,14 +180,14 @@ namespace SimulationGaragistesDAL.Model
                         else
                         {
                             // Si le jour est plus tot ou équal
-                            if (garagiste.getProchaineDispo().Jour <= plusTot.Jour)
+                            if (vmGaragiste.getProchaineDispo().Jour <= plusTot.Jour)
                             {
                                 //Si l'heure est plus tot -> meilleur cas 
-                                if (garagiste.getProchaineDispo().Heure < plusTot.Heure)
+                                if (vmGaragiste.getProchaineDispo().Heure < plusTot.Heure)
                                 {
-                                    garagisteChoisi = garagiste;
-                                    plusTot = garagiste.getProchaineDispo();
-                                    if (garagiste.getProchaineDispo().Jour < indexJour)
+                                    garagisteChoisi = vmGaragiste;
+                                    plusTot = vmGaragiste.getProchaineDispo();
+                                    if (vmGaragiste.getProchaineDispo().Jour < indexJour)
                                     {
                                         plusTot.Jour = indexJour;
                                         founded = true;
@@ -195,12 +198,16 @@ namespace SimulationGaragistesDAL.Model
                     }
                 }
             }
-            SimulationGaragistesDAL.Model.Garagistes.Creneau Debut;
-            garagisteChoisi.reserveJour(indexJour, revision, out Debut);
-            vmInter.Garagiste = garagisteChoisi;
+            VMGaragiste.Creneau Debut;
+            if (garagisteChoisi.Garagiste.id != 0)
+            {
+                garagisteChoisi.reserveJour(indexJour, revision, out Debut, out stat);
+                vmInter.Debut = Debut;
+            }
+            vmInter.VMGaragiste = garagisteChoisi;
             vmInter.JoursArrets = garagisteChoisi.getProchaineDispo().Heure == 1 ? garagisteChoisi.getProchaineDispo().Jour - indexJour : 0;
             vmInter.Fin = garagisteChoisi.getProchaineDispo();
-            vmInter.Debut = Debut;
+            vmInter.Stat = stat;
             
             return vmInter;
         }

@@ -12,22 +12,17 @@ namespace SimulationGaragistesDAL.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Révisions
+    public partial class Simulations
     {
-        public Révisions()
+        public Simulations()
         {
-            this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
             this.Statistiques = new HashSet<Statistiques>();
         }
     
         public int id { get; set; }
-        public string label { get; set; }
-        public int defaultTime { get; set; }
-        public Nullable<int> modele_id { get; set; }
-        public Nullable<int> km { get; set; }
+        public string nom { get; set; }
+        public System.DateTime created { get; set; }
     
-        public virtual Modeles Modeles { get; set; }
-        public virtual ICollection<Revisions_Garagistes> Revisions_Garagistes { get; set; }
         public virtual ICollection<Statistiques> Statistiques { get; set; }
     }
 }

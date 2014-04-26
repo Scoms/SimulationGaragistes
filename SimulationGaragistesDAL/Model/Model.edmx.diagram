@@ -18,6 +18,11 @@
         <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Vacances" Width="1.5" PointX="5.25" PointY="1" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Vacances_Garagistes" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Simulations" Width="1.5" PointX="7.5" PointY="9.625" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Statistiques" Width="1.5" PointX="9.75" PointY="1.375" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Garagistes" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Révisions" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Simulations" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

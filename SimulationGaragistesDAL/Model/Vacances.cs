@@ -14,11 +14,6 @@ namespace SimulationGaragistesDAL.Model
     
     public partial class Vacances
     {
-        public Vacances()
-        {
-            this.debut = DateTime.Now;
-            this.fin = DateTime.Now.AddDays(1);
-        }
         public int id { get; set; }
         public System.DateTime debut { get; set; }
         public System.DateTime fin { get; set; }

@@ -9,9 +9,10 @@ namespace SimulationGaragistesDAL.ViewModel
 {
     public class VMIntervention
     {
-        public Garagistes Garagiste { get; set; }
-        public SimulationGaragistesDAL.Model.Garagistes.Creneau Debut { get; set; }
-        public SimulationGaragistesDAL.Model.Garagistes.Creneau Fin { get; set; }
+        public VMGaragiste VMGaragiste { get; set; }
+        public VMGaragiste.Creneau Debut { get; set; }
+        public VMGaragiste.Creneau Fin { get; set; }
         public int JoursArrets { get; set; }
+        public Statistiques Stat { get; set; }
     }
 }

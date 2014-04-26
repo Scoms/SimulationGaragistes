@@ -54,6 +54,23 @@
           <Property Name="revision_id" Type="int" Nullable="false" />
           <Property Name="duree" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Simulations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nom" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Statistiques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="revision_id" Type="int" Nullable="false" />
+          <Property Name="garagiste_id" Type="int" Nullable="false" />
+          <Property Name="simulation_id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Vacances">
           <Key>
             <PropertyRef Name="id" />
@@ -127,6 +144,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Statistiques_Garagistes">
+          <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="1" />
+          <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistiques_Révisions">
+          <End Role="Révisions" Type="Self.Révisions" Multiplicity="1" />
+          <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Révisions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="revision_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistiques_Simulations">
+          <End Role="Simulations" Type="Self.Simulations" Multiplicity="1" />
+          <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Simulations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="simulation_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Vacances_Garagistes">
           <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="1" />
           <End Role="Vacances" Type="Self.Vacances" Multiplicity="*" />
@@ -146,6 +199,8 @@
           <EntitySet Name="Modeles" EntityType="Self.Modeles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Révisions" EntityType="Self.Révisions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Revisions_Garagistes" EntityType="Self.Revisions_Garagistes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Simulations" EntityType="Self.Simulations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Statistiques" EntityType="Self.Statistiques" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vacances" EntityType="Self.Vacances" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Garagistes_Franchise" Association="Self.FK_Garagistes_Franchise">
             <End Role="Franchises" EntitySet="Franchises" />
@@ -167,6 +222,18 @@
             <End Role="Modeles" EntitySet="Modeles" />
             <End Role="Révisions" EntitySet="Révisions" />
           </AssociationSet>
+          <AssociationSet Name="FK_Statistiques_Garagistes" Association="Self.FK_Statistiques_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistiques_Révisions" Association="Self.FK_Statistiques_Révisions">
+            <End Role="Révisions" EntitySet="Révisions" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistiques_Simulations" Association="Self.FK_Statistiques_Simulations">
+            <End Role="Simulations" EntitySet="Simulations" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
+          </AssociationSet>
           <AssociationSet Name="FK_Vacances_Garagistes" Association="Self.FK_Vacances_Garagistes">
             <End Role="Garagistes" EntitySet="Garagistes" />
             <End Role="Vacances" EntitySet="Vacances" />
@@ -186,6 +253,7 @@
           <NavigationProperty Name="Franchises" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Garagistes" ToRole="Franchises" />
           <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Garagistes" ToRole="Revisions_Garagistes" />
           <NavigationProperty Name="Vacances" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Garagistes" ToRole="Vacances" />
+          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Garagistes" FromRole="Garagistes" ToRole="Statistiques" />
         </EntityType>
         <EntityContainer Name="SimulationGaragistesEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Garagistes" EntityType="Self.Garagistes" />
@@ -218,6 +286,20 @@
           <AssociationSet Name="FK_Vacances_Garagistes" Association="SimulationGaragistesModel.FK_Vacances_Garagistes">
             <End Role="Garagistes" EntitySet="Garagistes" />
             <End Role="Vacances" EntitySet="Vacances" />
+          </AssociationSet>
+          <EntitySet Name="Simulations" EntityType="SimulationGaragistesModel.Simulations" />
+          <EntitySet Name="Statistiques" EntityType="SimulationGaragistesModel.Statistiques" />
+          <AssociationSet Name="FK_Statistiques_Garagistes" Association="SimulationGaragistesModel.FK_Statistiques_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistiques_Révisions" Association="SimulationGaragistesModel.FK_Statistiques_Révisions">
+            <End Role="Révisions" EntitySet="Révisions" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Statistiques_Simulations" Association="SimulationGaragistesModel.FK_Statistiques_Simulations">
+            <End Role="Simulations" EntitySet="Simulations" />
+            <End Role="Statistiques" EntitySet="Statistiques" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Franchises">
@@ -283,6 +365,7 @@
           <NavigationProperty Name="Modeles" Relationship="SimulationGaragistesModel.FK_Révisions_Modeles" FromRole="Révisions" ToRole="Modeles" />
           <Property Name="km" Type="Int32" />
           <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" FromRole="Révisions" ToRole="Revisions_Garagistes" />
+          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Révisions" FromRole="Révisions" ToRole="Statistiques" />
         </EntityType>
         <Association Name="FK_Révisions_Modeles">
           <End Type="SimulationGaragistesModel.Modeles" Role="Modeles" Multiplicity="0..1" />
@@ -353,6 +436,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Simulations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Simulations" ToRole="Statistiques" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="Statistiques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="revision_id" Type="Int32" Nullable="false" />
+          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
+          <Property Name="simulation_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Statistiques_Garagistes" FromRole="Statistiques" ToRole="Garagistes" />
+          <NavigationProperty Name="Révisions" Relationship="SimulationGaragistesModel.FK_Statistiques_Révisions" FromRole="Statistiques" ToRole="Révisions" />
+          <NavigationProperty Name="Simulations" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Statistiques" ToRole="Simulations" />
+        </EntityType>
+        <Association Name="FK_Statistiques_Garagistes">
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistiques_Révisions">
+          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Révisions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="revision_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Statistiques_Simulations">
+          <End Type="SimulationGaragistesModel.Simulations" Role="Simulations" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Simulations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Statistiques">
+              <PropertyRef Name="simulation_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -419,6 +559,25 @@
                 <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
                 <ScalarProperty Name="fin" ColumnName="fin" />
                 <ScalarProperty Name="debut" ColumnName="debut" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Simulations">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Simulations">
+              <MappingFragment StoreEntitySet="Simulations">
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statistiques">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Statistiques">
+              <MappingFragment StoreEntitySet="Statistiques">
+                <ScalarProperty Name="simulation_id" ColumnName="simulation_id" />
+                <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
+                <ScalarProperty Name="revision_id" ColumnName="revision_id" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

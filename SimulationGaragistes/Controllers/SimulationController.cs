@@ -1,6 +1,7 @@
 ﻿using SimlulationGaragistesService.Service;
 using SimulationGaragistes.ViewModels;
 using SimulationGaragistesDAL.Model;
+using SimulationGaragistesDAL.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -92,12 +93,12 @@ namespace SimulationGaragistes.Controllers
             ServiceGaragistes serviceGaragiste = new ServiceGaragistes(eh);
             ServiceModeles serviceModele = new ServiceModeles(eh);
 
-            vmSimuData.lGaragistes = new List<Garagistes>();
+            vmSimuData.lVMGaragistes = new List<VMGaragiste>();
             vmSimuData.lVoitures = new List<Voiture>();
 
             foreach (var item in garagistesIds)
             {
-                vmSimuData.lGaragistes.Add(serviceGaragiste.findById(item));
+                vmSimuData.lVMGaragistes.Add(new VMGaragiste(serviceGaragiste.findById(item)));
             }
 
             foreach (var item in modelesQuantity)
@@ -112,13 +113,35 @@ namespace SimulationGaragistes.Controllers
 
             vmSimuData.nom = pVmSimu.nom == String.Empty ? "sanstitre" : pVmSimu.nom;
 
+
             return runSimulation(vmSimuData);
+        }
+
+        private void enregistreStats(VMSimulationData vmSimuData)
+        {
+            ErrorHandler eh = new ErrorHandler();
+            ServiceStatistiques serviceStatistiques = new ServiceStatistiques(eh);
+            ServiceSimulations serviceSimulations = new ServiceSimulations(eh);
+
+            Simulations simulation = new Simulations();
+            simulation.nom = vmSimuData.nom;
+            simulation.created = DateTime.Now;
+            serviceSimulations.Insert(simulation);
+
+            foreach (var stat in vmSimuData.statistiques)
+            {
+                stat.simulation_id = simulation.id;
+                if(stat.garagiste_id != 0)
+                    serviceStatistiques.Insert(stat);
+            }
         }
 
         public ActionResult runSimulation(VMSimulationData vmSimuData)
         {
             List<VMSimulationData.DayRepport> lRepports = new List<VMSimulationData.DayRepport>();
             DateTime currentDate = vmSimuData.debut;
+            Statistiques stat = new Statistiques();
+            List<Statistiques> lStats = new List<Statistiques>();
 
             for (int i = 1; i <= vmSimuData.nbJours; i++)
             {
@@ -130,7 +153,8 @@ namespace SimulationGaragistes.Controllers
 
                 foreach (Voiture voiture in vmSimuData.lVoitures)
                 {
-                    repport.evenements.Add(voiture.Roule(currentDate,i,vmSimuData.lGaragistes));
+                    repport.evenements.Add(voiture.Roule(currentDate,i,vmSimuData.lVMGaragistes, out stat));
+                    lStats.Add(stat);
                 }
 
                 lRepports.Add(repport);
@@ -153,6 +177,11 @@ namespace SimulationGaragistes.Controllers
                 i2++;
             }
             file.Close();
+
+            //Enregsitre les stats
+            vmSimuData.statistiques = lStats;
+            enregistreStats(vmSimuData);
+
             return View(lRepports);
         }
 
@@ -167,23 +196,24 @@ namespace SimulationGaragistes.Controllers
             //Durée
             vmSimuData.debut = DateTime.Now.AddDays(1);
             vmSimuData.nbJours = 10;
-            vmSimuData.nom = "demo.txt";
+            vmSimuData.nom = "demo";
             
             //1 garagiste
-            List<Garagistes> lGaragiste = new List<Garagistes>();
+            List<VMGaragiste> lVMGaragiste = new List<VMGaragiste>();
 
             int nbGaragiste = 1;
-            foreach (var item in serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes", "Vacances","Franchises"}))
+            foreach (var garagiste in serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes", "Vacances","Franchises"}))
             {
                 if (nbGaragiste <= 1)
                 {
-                    item.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
-                    lGaragiste.Add(item);
+                    VMGaragiste vmGara = new VMGaragiste(garagiste);
+                    vmGara.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
+                    lVMGaragiste.Add(vmGara);
                     nbGaragiste++;
                 }
             }
             
-            vmSimuData.lGaragistes = lGaragiste;
+            vmSimuData.lVMGaragistes = lVMGaragiste;
 
             //2 voitures
             List<Voiture> lVoiture = new List<Voiture>();
@@ -202,7 +232,8 @@ namespace SimulationGaragistes.Controllers
             return runSimulation(vmSimuData);
             /**
              * TODO :
-             *  statistiques en BDD
+             *  Affichage des stats
+             *  CSS
              *  
              * Bonus :
              * Gestion des pannes
