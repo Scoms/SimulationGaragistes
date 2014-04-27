@@ -22,6 +22,8 @@ namespace SimulationGaragistesDAL.Model
         public int id { get; set; }
         public string nom { get; set; }
         public System.DateTime created { get; set; }
+        public Nullable<int> duree { get; set; }
+        public Nullable<System.DateTime> debut { get; set; }
     
         public virtual ICollection<Statistiques> Statistiques { get; set; }
     }

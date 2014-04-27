@@ -14,5 +14,13 @@ namespace SimulationGaragistesRepository.Repository
         {
             this._eh = eh;
         }
+
+        public override Simulations findById(int id)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                return context.Simulations.Include("Statistiques").Include("Statistiques.Révisions").Include("Statistiques.Garagistes").Include("Statistiques.Garagistes.Franchises").Include("Statistiques.Garagistes.Vacances").Where(m => m.id == id).FirstOrDefault();
+            }
+        }
     }
 }

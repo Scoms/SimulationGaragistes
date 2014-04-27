@@ -1,0 +1,76 @@
+﻿@model SimulationGaragistes.ViewModels.VMStatistiques
+
+
+<table class="table">
+    <tr>
+        <th>
+            Garagiste
+        </th>
+        <th>
+            Révision
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Simulation.Statistiques)
+    {
+        <tr>
+            <td>
+                @item.Garagistes.nom (@item.Garagistes.Franchises.label)
+            </td>
+            <td>
+                @item.Révisions.label
+            </td>
+        </tr>
+    }
+
+</table>
+<p>
+    Durée de la simulation : @Model.Simulation.duree
+    
+    <table class="table">
+        <tr>
+            <th>
+                Garagiste
+            </th>
+            <th>
+                Interventions
+            </th>
+            <th>
+                Durée totale
+            </th>
+            <th>
+                Heures disponibles
+            </th>
+            <th>
+                Occupation
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Occupations)
+        {
+            <tr>
+                <td>
+                    @item.Garagiste.nom (@item.Garagiste.Franchises.label)
+
+                </td>
+                <td>
+                    @item.Interventions
+                </td>
+                <td>
+                    @item.DureeTotal
+                </td>
+                <td>
+                    @(item.JourTravailles * 8 - item.DureeTotal)
+                </td>
+
+                <td>
+                    @{
+                         double occup = item.DureeTotal * 100 / (item.JourTravailles * 8 - item.DureeTotal);
+                    }
+                    @occup %
+                </td>
+            </tr>
+        }
+
+    </table>
+</p>

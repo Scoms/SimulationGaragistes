@@ -126,6 +126,8 @@ namespace SimulationGaragistes.Controllers
             Simulations simulation = new Simulations();
             simulation.nom = vmSimuData.nom;
             simulation.created = DateTime.Now;
+            simulation.duree = vmSimuData.nbJours;
+            simulation.debut = vmSimuData.debut;
             serviceSimulations.Insert(simulation);
 
             foreach (var stat in vmSimuData.statistiques)

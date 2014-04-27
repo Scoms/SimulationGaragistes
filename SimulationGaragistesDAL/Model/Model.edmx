@@ -61,6 +61,8 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nom" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="created" Type="date" Nullable="false" />
+          <Property Name="duree" Type="int" />
+          <Property Name="debut" Type="date" />
         </EntityType>
         <EntityType Name="Statistiques">
           <Key>
@@ -444,6 +446,8 @@
           <Property Name="nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Simulations" ToRole="Statistiques" />
           <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="duree" Type="Int32" />
+          <Property Name="debut" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="Statistiques">
           <Key>
@@ -566,6 +570,8 @@
           <EntitySetMapping Name="Simulations">
             <EntityTypeMapping TypeName="SimulationGaragistesModel.Simulations">
               <MappingFragment StoreEntitySet="Simulations">
+                <ScalarProperty Name="debut" ColumnName="debut" />
+                <ScalarProperty Name="duree" ColumnName="duree" />
                 <ScalarProperty Name="created" ColumnName="created" />
                 <ScalarProperty Name="nom" ColumnName="nom" />
                 <ScalarProperty Name="id" ColumnName="id" />
