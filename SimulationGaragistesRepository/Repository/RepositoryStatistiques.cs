@@ -17,7 +17,15 @@ namespace SimulationGaragistesRepository.Repository
 
         public override void Insert(Statistiques obj)
         {
-            base.Insert(obj);
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                this.ValidationTest(obj);
+                if (!this._eh.hasErrors())
+                {
+                    context.Statistiques.Add(obj);
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

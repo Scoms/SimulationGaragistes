@@ -1,4 +1,4 @@
-﻿<ul>
-    <li>@Html.ActionLink("Liste", "Index")</li>
-    <li>@Html.ActionLink("Ajouter", "Insert", new { id = 0 },null)</li>
+﻿<ul class="submenu">
+    <li>@Html.ActionLink("Liste", "Index", null, new { @class = "btn btn-primary" })</li>
+    <li>@Html.ActionLink("Ajouter", "Insert", new { id = 0 }, new { @class = "btn btn-primary" })</li>
 </ul>

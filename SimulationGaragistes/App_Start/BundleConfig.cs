@@ -29,7 +29,8 @@ namespace SimulationGaragistes
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/jquery-ui-1.10.4.custom.min.css"));
+                      "~/Content/jquery-ui-1.10.4.custom.min.css",
+                      "~/Content/custom.css"));
         }
     }
 }

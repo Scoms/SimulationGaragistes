@@ -75,7 +75,7 @@ namespace SimulationGaragistesDAL.ViewModel
             }
 
             //Jour non travaillés de manière générale
-            for (int i = 0; i <= nbJours; i++)
+            for (int i = 0; i < nbJours; i++)
             {
                 DayOfWeek dayOfWeek = debutSimu.AddDays(i).DayOfWeek;
                 if(dayOfWeek == DayOfWeek.Sunday || dayOfWeek == DayOfWeek.Saturday)

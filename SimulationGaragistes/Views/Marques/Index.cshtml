@@ -2,7 +2,7 @@
 @model List<SimulationGaragistesDAL.Model.Marques>
 @Html.Partial("Menu")
 
-<table>
+<table class="table table-striped">
     <tr>
         <th>Marque</th>
         <th></th>
@@ -14,7 +14,7 @@
             <tr>
                 <td>@item.label</td>
                 <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
-                <td>@Html.ActionLink("supprimer", "Delete",new { id = item.id },null)</td>
+                <td>@Html.ActionLink("supprimer", "Delete", new { id = item.id }, null)</td>
             </tr>
         }
     }

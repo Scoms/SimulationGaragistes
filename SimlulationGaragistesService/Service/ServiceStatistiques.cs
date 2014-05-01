@@ -17,6 +17,10 @@ namespace SimlulationGaragistesService.Service
             this._repo = new RepositoryStatistiques(this._eh);
         }
 
+        public override void Insert(Statistiques obj)
+        {
+            base.Insert(obj);
+        }
         public override void ValidationTest(Statistiques obj)
         {
             if (obj.garagiste_id == 0)

@@ -69,7 +69,7 @@ namespace SimulationGaragistesDAL.Model
             return res;
         }
 
-        public string Roule(DateTime date, int indexJour,List<VMGaragiste> lVMGaragistes, out Statistiques pStat)
+        public string Roule(DateTime date, int indexJour,List<VMGaragiste> lVMGaragistes, out Statistiques pStat, int jourMAX)
         {
             // Week end (20-50) Semaine (50-100)
             pStat = new Statistiques();
@@ -91,7 +91,11 @@ namespace SimulationGaragistesDAL.Model
             dayKm = this.rand.Next(min,max);
 
             //si la voiture est arrété
-            if(nbJoursArrets > 0)
+            if (nbJoursArrets == jourMAX)
+            {
+                repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes", this.ToString());
+            }
+            else if(nbJoursArrets > 0)
             {
                 repport = String.Format("{0} n'a pas roulée, en réparation jusqu'au jour {1}", this.ToString(), indexJour + nbJoursArrets);
                 nbJoursArrets--;
@@ -111,12 +115,22 @@ namespace SimulationGaragistesDAL.Model
                     }
                     else
                     {
-                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
-                        this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                        if (vm.Fin.Jour > jourMAX)
+                        {
+                            repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes",this.ToString());
+                            this.nbJoursArrets = jourMAX;
+                            pStat = null;
+                        }
+                        else
+                        {
+                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                            this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                        }
                     }
                 }
                 else
                 {
+
                     if (this.prochaineRevision.km <= this.km + dayKm)
                     {
                         this.km = (int)this.prochaineRevision.km;
@@ -130,9 +144,17 @@ namespace SimulationGaragistesDAL.Model
                         }
                         else
                         {
-                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
-                            this.nbJoursArrets = vm.Fin.Jour - indexJour;
-
+                            if (vm.Fin.Jour > jourMAX)
+                            {
+                                repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes", this.ToString());
+                                this.nbJoursArrets = jourMAX;
+                                pStat = null;
+                            }
+                            else
+                            {
+                                repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                                this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                            }
                         }
                         this.prochaineRevision = this.getProchaineRevision();
                     }
@@ -142,6 +164,7 @@ namespace SimulationGaragistesDAL.Model
                         repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
                     }
                 }
+               
                 
             }
             return repport;

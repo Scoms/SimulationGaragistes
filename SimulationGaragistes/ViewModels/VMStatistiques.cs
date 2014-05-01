@@ -9,8 +9,8 @@ namespace SimulationGaragistes.ViewModels
     public class VMStatistiques
     {
         public Simulations Simulation { get; set; }
-
         public List<OccupationGaragiste> Occupations { get; set; }
+        public List<Garagistes> lGaragistesLibres { get; set; }
 
         public class OccupationGaragiste
         {

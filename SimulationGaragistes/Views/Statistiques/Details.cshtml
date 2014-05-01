@@ -1,7 +1,7 @@
 ﻿@model SimulationGaragistes.ViewModels.VMStatistiques
 
 
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
             Garagiste
@@ -9,18 +9,46 @@
         <th>
             Révision
         </th>
+        <th>
+            Nombre
+        </th>
     </tr>
 
-    @foreach (var item in Model.Simulation.Statistiques)
-    {
-        <tr>
-            <td>
-                @item.Garagistes.nom (@item.Garagistes.Franchises.label)
-            </td>
-            <td>
-                @item.Révisions.label
-            </td>
-        </tr>
+    @{
+        SimulationGaragistesDAL.Model.Statistiques prevItem = new SimulationGaragistesDAL.Model.Statistiques();   
+       foreach (var item in Model.Simulation.Statistiques.OrderBy(s => s.garagiste_id).ThenBy(s => s.revision_id))
+        {
+            if (item.Révisions != null)
+            {
+                if (item.revision_id != prevItem.revision_id)
+                {
+                    <tr>
+                    <td>
+                        @if (item.garagiste_id != prevItem.garagiste_id)
+                        {
+                            string res = item.Garagistes.nom + "(" + item.Garagistes.Franchises.label +")";
+                            <div>@res</div>
+                        }
+                    </td>
+                    <td>
+                        @item.Révisions.label @item.Révisions.km
+                    </td>
+                    <td>
+                        @Model.Simulation.Statistiques.Where(s => s.revision_id == item.revision_id && s.garagiste_id == item.garagiste_id).Count()
+                    </td>
+                      </tr>  
+                    try
+                    {
+                        Model.lGaragistesLibres.Remove(item.Garagistes);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+                prevItem = item;
+            }
+        }   
     }
 
 </table>
@@ -65,12 +93,21 @@
 
                 <td>
                     @{
-                         double occup = item.DureeTotal * 100 / (item.JourTravailles * 8 - item.DureeTotal);
+                        double occup = (item.DureeTotal * 100 / (item.JourTravailles * 8));
                     }
                     @occup %
                 </td>
             </tr>
         }
-
     </table>
+    <p>
+        Les garagistes suivants n'ont enregistrés aucune reservations :
+        @{
+            <ol>
+                @foreach (var item in Model.lGaragistesLibres)
+                {
+                    <li>@item.nom (@item.Franchises.label)</li>
+                }
+            </ol>
+        }    
 </p>

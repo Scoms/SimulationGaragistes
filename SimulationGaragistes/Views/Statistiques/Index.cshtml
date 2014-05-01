@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SimulationGaragistesDAL.Model.Simulations>
 
-<table class="table">
+<table class="table table-striped">
     <tr>
         <th>
             Simulation
@@ -13,24 +13,26 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(@item.nom, "Details", new { id = item.id },null)        
-        </td>
-        <td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(@item.nom, "Details", new { id = item.id }, null)
+            </td>
+            <td>
 
-            @{
-                String rootPath = Server.MapPath("~/Logs/");
-                String path = (rootPath + item.nom);
-                string src = path;
-            }
-            <a href="@src">@item.nom+.txt</a>
-        </td>
-        <td>
-            @item.created
-        </td>
-    </tr>
-}
+                @{
+        String rootPath = Server.MapPath("~/Logs/");
+        String path = (rootPath + item.nom);
+        string src = path;
+                }
+                <a href="@src">fichier</a>
+            </td>
+            <td>
+                @item.created
+            </td>
+        </tr>
+    }
 
 </table>
+

@@ -4,7 +4,7 @@
 @Html.Partial("Menu")
 
 <p>@TempData["success"]</p>
-<table>
+<table class="table table-striped">
     <tr>
         <th>Nom</th>
         <th>Franchise</th>
@@ -19,9 +19,10 @@
             <td>@garagiste.nom</td>
             <td>@garagiste.Franchises.label</td>
             <td>
-                @Html.ActionLink("modifier", "Insert", "Garagistes", new { 
-                    id = garagiste.id
-                },null)
+                @Html.ActionLink("modifier", "Insert", "Garagistes", new
+           {
+               id = garagiste.id
+           }, null)
             </td>
             <td>
                 @Html.ActionLink("supprimer", "Delete", "Garagistes", new
@@ -36,7 +37,7 @@
                }, null)
             </td>
             <td>
-                @Html.ActionLink("configurer vacances", "ConfigureVacances", "Garagistes", new { id = garagiste.id},null)
+                @Html.ActionLink("configurer vacances", "ConfigureVacances", "Garagistes", new { id = garagiste.id }, null)
             </td>
         </tr>
     }

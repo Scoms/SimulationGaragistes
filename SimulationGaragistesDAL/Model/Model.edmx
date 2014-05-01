@@ -69,7 +69,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="revision_id" Type="int" Nullable="false" />
+          <Property Name="revision_id" Type="int" />
           <Property Name="garagiste_id" Type="int" Nullable="false" />
           <Property Name="simulation_id" Type="int" Nullable="false" />
         </EntityType>
@@ -159,7 +159,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Statistiques_Révisions">
-          <End Role="Révisions" Type="Self.Révisions" Multiplicity="1" />
+          <End Role="Révisions" Type="Self.Révisions" Multiplicity="0..1" />
           <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Révisions">
@@ -171,7 +171,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Statistiques_Simulations">
-          <End Role="Simulations" Type="Self.Simulations" Multiplicity="1" />
+          <End Role="Simulations" Type="Self.Simulations" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Simulations">
@@ -454,7 +456,7 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="revision_id" Type="Int32" Nullable="false" />
+          <Property Name="revision_id" Type="Int32" />
           <Property Name="garagiste_id" Type="Int32" Nullable="false" />
           <Property Name="simulation_id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Statistiques_Garagistes" FromRole="Statistiques" ToRole="Garagistes" />
@@ -474,7 +476,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Statistiques_Révisions">
-          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="0..1" />
           <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Révisions">

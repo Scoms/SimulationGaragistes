@@ -15,6 +15,20 @@ namespace SimulationGaragistesRepository.Repository
             this._eh = eh;
         }
 
+        public override void Insert(Simulations obj)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                Simulations oldSimu = context.Simulations.Where(s => s.nom.Equals(obj.nom)).FirstOrDefault();
+                if (oldSimu != null)
+                {
+                    context.Entry(oldSimu).State = System.Data.Entity.EntityState.Deleted;
+                    context.SaveChanges();
+                }
+            }
+            base.Insert(obj);
+        }
+
         public override Simulations findById(int id)
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())

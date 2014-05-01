@@ -132,9 +132,23 @@ namespace SimulationGaragistes.Controllers
 
             foreach (var stat in vmSimuData.statistiques)
             {
+                if (stat != null)
+                {
+                    stat.simulation_id = simulation.id;
+                    if (stat.garagiste_id != 0)
+                    {
+                        serviceStatistiques.Insert(stat);
+                    }
+                }
+            }
+
+            foreach (var item in vmSimuData.lVMGaragistes)
+            {
+                Statistiques stat = new Statistiques();
                 stat.simulation_id = simulation.id;
-                if(stat.garagiste_id != 0)
-                    serviceStatistiques.Insert(stat);
+                stat.garagiste_id = item.Garagiste.id;
+                stat.revision_id = null;
+                serviceStatistiques.Insert(stat);
             }
         }
 
@@ -155,7 +169,7 @@ namespace SimulationGaragistes.Controllers
 
                 foreach (Voiture voiture in vmSimuData.lVoitures)
                 {
-                    repport.evenements.Add(voiture.Roule(currentDate,i,vmSimuData.lVMGaragistes, out stat));
+                    repport.evenements.Add(voiture.Roule(currentDate,i,vmSimuData.lVMGaragistes, out stat,vmSimuData.nbJours));
                     lStats.Add(stat);
                 }
 
@@ -197,7 +211,7 @@ namespace SimulationGaragistes.Controllers
 
             //Durée
             vmSimuData.debut = DateTime.Now.AddDays(1);
-            vmSimuData.nbJours = 10;
+            vmSimuData.nbJours = 100;
             vmSimuData.nom = "demo";
             
             //1 garagiste
@@ -206,7 +220,7 @@ namespace SimulationGaragistes.Controllers
             int nbGaragiste = 1;
             foreach (var garagiste in serviceGaragiste.findAll(new List<string>() { "Revisions_Garagistes", "Vacances","Franchises"}))
             {
-                if (nbGaragiste <= 1)
+                if (nbGaragiste <= 5)
                 {
                     VMGaragiste vmGara = new VMGaragiste(garagiste);
                     vmGara.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
@@ -223,7 +237,7 @@ namespace SimulationGaragistes.Controllers
             lModeles.Add(serviceModele.findAll(new List<string>(){"Révisions","Marques"}).FirstOrDefault());
             foreach (var item in lModeles)
             {
-                for (int i = 1; i <= 5; i++)
+                for (int i = 1; i <= 1000; i++)
                 {
                     Voiture voiture = new Voiture(item, i,119999);
                     lVoiture.Add(voiture);
@@ -234,8 +248,6 @@ namespace SimulationGaragistes.Controllers
             return runSimulation(vmSimuData);
             /**
              * TODO :
-             *  Affichage des stats
-             *  CSS
              *  
              * Bonus :
              * Gestion des pannes

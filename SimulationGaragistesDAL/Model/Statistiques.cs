@@ -15,7 +15,7 @@ namespace SimulationGaragistesDAL.Model
     public partial class Statistiques
     {
         public int id { get; set; }
-        public int revision_id { get; set; }
+        public Nullable<int> revision_id { get; set; }
         public int garagiste_id { get; set; }
         public int simulation_id { get; set; }
     

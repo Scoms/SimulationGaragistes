@@ -2,25 +2,34 @@
 
 <h1>Simulation</h1>
 
-@using(Html.BeginForm("startSimulation","Simulation",FormMethod.Post))
+@using (Html.BeginForm("startSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal" }))
 {
 
     <h2>Durée</h2>
-
-    <p>
-        @Html.Label("Nom : ")
-        @Html.TextBox("nom", Model.nom)
-        @Html.Label("Début : ")
-        @Html.TextBox("dateStart", Model.dateStart)
-        @Html.Label("Durée : ")
-        @Html.TextBox("nbJours",Model.nbJours)
-    </p>
+    <div class="form-group">
+        @Html.Label("nom", "Nom : ", new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBox("nom", Model.nom, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("nbJours","Durée : ",new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBox("nbJours", Model.nbJours,new { @class = "form-control" })
+        </div>
+    </div>
+        <div class="form-group">
+        @Html.Label("dateStart","Début : ", new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            @Html.TextBox("dateStart", Model.dateStart, new { @class = "form-control" })
+        </div>
+    </div>
 
     <div id="divGaragistes">
 
         <h2>Garagistes</h2>
 
-        <table>
+        <table class="table table-striped">
             <tr>
                 <th>Garagiste</th>
                 <th>Franchise</th>
@@ -38,39 +47,31 @@
             }
         </table>
 
-    </div>
-    <div id="divVacances">
-        <p>
-            Vacances
-        </p>
-    </div>
-    <div id="divVoitures">
+            </div>
+            <h2>Voitures</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Modèle</th>
+            <th>Marque</th>
+            <th>Nombre</th>
+        </tr>
+        @{
+    foreach (var item in Model.ModelesConfs)
+    {
+        <tr>
+            <td>@item.Modele.label</td>
+            <td>@item.Modele.Marques.label</td>
+            <td>@Html.TextBox("modele" + item.Modele.id, item.Quantite, new { @class = "form-control" })</td>
+        </tr>
+    }
+        }
+    </table>
 
-    </div>
-        <h2>Voitures</h2>
-        <table>
-            <tr>
-                <th>Modèle</th>
-                <th>Marque</th>
-                <th>Nombre</th>
-            </tr>
-            @{
-            foreach (var item in Model.ModelesConfs)
-                {
-                    <tr>
-                        <td>@item.Modele.label</td>
-                        <td>@item.Modele.Marques.label</td>
-                        <td>@Html.TextBox("modele" + item.Modele.id,item.Quantite)</td>
-                    </tr>
-                }
-            }
-        </table>
-
-    <input type="submit" name="startSimulation" value="Go !" />
+            <input type="submit" class="btn btn-default" name="startSimulation" value="Go !" />
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#dateStart").datepicker();
-    })
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#dateStart").datepicker();
+        })
+    </script>
