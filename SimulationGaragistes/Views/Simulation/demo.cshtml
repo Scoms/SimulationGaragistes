@@ -4,6 +4,7 @@
     @{
         foreach (var item in Model)
         {
+           
             var french = new System.Globalization.CultureInfo("FR-fr");
             var info = french.DateTimeFormat;
             foreach (var dayName in info.DayNames)

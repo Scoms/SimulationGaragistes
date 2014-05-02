@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Creneau.cs" />
     <Compile Include="Model\Franchises.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

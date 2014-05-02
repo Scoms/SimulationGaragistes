@@ -71,11 +71,15 @@ namespace SimulationGaragistesDAL.Model
 
         public string Roule(DateTime date, int indexJour,List<VMGaragiste> lVMGaragistes, out Statistiques pStat, int jourMAX)
         {
-            // Week end (20-50) Semaine (50-100)
+            // Init
             pStat = new Statistiques();
             string repport = String.Empty;
             int min, max = 0;
             int dayKm = 0;
+            VMIntervention vm = new VMIntervention();
+            vm.VMGaragiste = new VMGaragiste(new Garagistes());
+
+            //Determine le nombre de km à parcourir le jour
             if(date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
                 min = MIN_WEND;
@@ -86,103 +90,99 @@ namespace SimulationGaragistesDAL.Model
                 min = MIN_WEEK;
                 max = MAX_WEEK;
             }
-
-            //Thread.Sleep(SLEEPTIME);
             dayKm = this.rand.Next(min,max);
 
-            //si la voiture est arrété
+            //si la voiture est arrétée
             if (nbJoursArrets == jourMAX)
             {
                 repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes", this.ToString());
             }
             else if(nbJoursArrets > 0)
             {
-                repport = String.Format("{0} n'a pas roulée, en réparation jusqu'au jour {1}", this.ToString(), indexJour + nbJoursArrets);
+                repport = String.Format("{0} n'a pas roulée, en réparation jusqu'au jour {1}", this.ToString(), indexJour + nbJoursArrets - 1);
                 nbJoursArrets--;
             }
             else
             {
+                //La voiture est arretée 
                 if (nbJoursArrets == -1)
                 {
                     repport = String.Format("{0} n'a pas roulée, en attente de reservation pour une réparation", this.ToString());
                     nbJoursArrets = 0;
-                    VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
-                    pStat = vm.Stat;
-                    if (vm.VMGaragiste.Garagiste.id == 0)
-                    {
-                        repport = String.Format("Pas de garagiste disponile pour {0}", this);
-                        this.nbJoursArrets = -1;
-                    }
-                    else
-                    {
-                        if (vm.Fin.Jour > jourMAX)
-                        {
-                            repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes",this.ToString());
-                            this.nbJoursArrets = jourMAX;
-                            pStat = null;
-                        }
-                        else
-                        {
-                            repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
-                            this.nbJoursArrets = vm.Fin.Jour - indexJour;
-                        }
-                    }
+                    vm = this.chercherIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
                 }
                 else
-                {
-
+	            {
                     if (this.prochaineRevision.km <= this.km + dayKm)
                     {
                         this.km = (int)this.prochaineRevision.km;
-                        VMIntervention vm = this.reserverIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
-                        pStat = vm.Stat;
-                        
-                        if (vm.VMGaragiste.Garagiste.id == 0)
-                        {
-                            repport = String.Format("Pas de garagiste disponible pour {0}", this);
-                            this.nbJoursArrets = -1;
-                        }
-                        else
-                        {
-                            if (vm.Fin.Jour > jourMAX)
-                            {
-                                repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes", this.ToString());
-                                this.nbJoursArrets = jourMAX;
-                                pStat = null;
-                            }
-                            else
-                            {
-                                repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
-                                this.nbJoursArrets = vm.Fin.Jour - indexJour;
-                            }
-                        }
-                        this.prochaineRevision = this.getProchaineRevision();
+                        vm = this.chercherIntervention(this.prochaineRevision, indexJour, lVMGaragistes);
                     }
                     else
                     {
                         this.km += dayKm;
-                        repport = String.Format("{0} a roulée {1} kms ({2})", this.ToString(), dayKm, this.km);
+                        repport = String.Format("{0} à roulée {1} km ({2})", this, dayKm, this.km);
+                        return repport;
+                    }
+	            }
+
+                pStat = vm.Stat;
+                if (vm.VMGaragiste.Garagiste.id == 0)
+                {
+                    repport = String.Format("Pas de garagiste disponile pour {0}", this);
+                    this.nbJoursArrets = -1;
+                }
+                else
+                {
+                    if (vm.Fin.Jour > jourMAX)
+                    {
+                        repport = String.Format("{0} ne sera pas réparée par manque de disponibilité des garagistes",this.ToString());
+                        this.nbJoursArrets = jourMAX;
+                        pStat = null;
+                    }
+                    else
+                    {
+                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                        this.nbJoursArrets = vm.Fin.Jour - indexJour;
+                        this.prochaineRevision = this.getProchaineRevision();
                     }
                 }
-               
-                
             }
             return repport;
         }
 
-        private VMIntervention reserverIntervention(Révisions revision,int indexJour,List<VMGaragiste> lVMGaragistes)
+        private VMIntervention chercherIntervention(Révisions revision,int indexJour,List<VMGaragiste> lVMGaragistes)
         {
             VMIntervention vmInter = new VMIntervention();
-            vmInter.Fin = new VMGaragiste.Creneau();
-            vmInter.Debut = new VMGaragiste.Creneau();
-            VMGaragiste.Creneau plusTot = new VMGaragiste.Creneau();
-            plusTot.Heure = -1;
+            vmInter.Fin = new Creneau();
+            vmInter.Debut = new Creneau();
+            Creneau courant = new Creneau();
+            Creneau plusTot = new Creneau();
             Statistiques stat = new Statistiques();
-
-            bool founded = false;
             VMGaragiste garagisteChoisi = new VMGaragiste(new Garagistes());
+
             foreach (VMGaragiste vmGaragiste in lVMGaragistes)
             {
+                courant = vmGaragiste.getProchaineDispo(indexJour);
+
+                //Le garagiste n'accepte personne si il est plein
+                if(courant.Jour == indexJour)
+                {
+                    if (plusTot.Jour == 0)
+                    {
+                        plusTot = courant;
+                        garagisteChoisi = vmGaragiste;
+                    }
+                    else
+                    {
+                        if (courant.Heure < plusTot.Heure)
+                        {
+                            plusTot = courant;
+                            garagisteChoisi = vmGaragiste;
+                        }
+                    }
+                }
+                /*
                 //Si le garagiste n'est pas en vacances
                 if(!vmGaragiste.estEnVacances(indexJour))
                 {
@@ -219,17 +219,18 @@ namespace SimulationGaragistesDAL.Model
                             }
                         }
                     }
-                }
+                }*/
             }
-            VMGaragiste.Creneau Debut;
+
             if (garagisteChoisi.Garagiste.id != 0)
             {
+                Creneau Debut;
                 garagisteChoisi.reserveJour(indexJour, revision, out Debut, out stat);
                 vmInter.Debut = Debut;
             }
             vmInter.VMGaragiste = garagisteChoisi;
-            vmInter.JoursArrets = garagisteChoisi.getProchaineDispo().Heure == 1 ? garagisteChoisi.getProchaineDispo().Jour - indexJour : 0;
-            vmInter.Fin = garagisteChoisi.getProchaineDispo();
+            vmInter.JoursArrets = garagisteChoisi.getProchaineDispo(indexJour).Heure == 1 ? garagisteChoisi.getProchaineDispo(indexJour).Jour - indexJour : 0;
+            vmInter.Fin = garagisteChoisi.getProchaineDispo(indexJour);
             vmInter.Stat = stat;
             
             return vmInter;
