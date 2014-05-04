@@ -16,6 +16,7 @@ namespace SimulationGaragistes.ViewModels
         public DateTime debut { get; set; }
         public List<DayRepport> repports { get; set; }
         public List<Statistiques> statistiques { get; set; }
+        public List<Panne> lPannes { get; set; }
 
         public class DayRepport
         {

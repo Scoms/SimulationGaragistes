@@ -79,6 +79,7 @@
     <Compile Include="Model\Modeles.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Panne.cs" />
     <Compile Include="Model\Revisions_Garagistes.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

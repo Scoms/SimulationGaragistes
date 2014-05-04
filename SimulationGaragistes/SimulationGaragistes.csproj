@@ -259,6 +259,9 @@
     <Content Include="Views\Simulation\demo.cshtml" />
     <Content Include="Views\Statistiques\Index.cshtml" />
     <Content Include="Views\Statistiques\Details.cshtml" />
+    <Content Include="Views\Simulation\addPannes.cshtml" />
+    <Content Include="Views\Simulation\result.cshtml" />
+    <Content Include="Views\Simulation\hidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

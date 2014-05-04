@@ -24,5 +24,10 @@ namespace SimlulationGaragistesService.Service
                 this._eh.addError("Le modèle doit être identifié par un label");
             }
         }
+
+        public Modeles Find(string marque, string modeleString)
+        {
+            return ((RepositoryModeles)this._repo).Find(marque, modeleString);
+        }
     }
 }

@@ -23,6 +23,7 @@ namespace SimulationGaragistesDAL.Model
         public int id { get; set; }
         public int km { get; set; }
         public Modeles modele { get; set; }
+        public List<Panne> lPannes { get; set; }
 
         private int nbJoursArrets = 0;
 
@@ -41,7 +42,7 @@ namespace SimulationGaragistesDAL.Model
         {
             this.id = pId;
             this.modele = pModele;
-
+            this.lPannes = new List<Panne>();
             this.rand = new Random();
             Thread.Sleep(SLEEPTIME);
             this.km = km;
@@ -92,6 +93,8 @@ namespace SimulationGaragistesDAL.Model
             }
             dayKm = this.rand.Next(min,max);
 
+            //On regarde si panne le jour même 
+
             //si la voiture est arrétée
             if (nbJoursArrets == jourMAX)
             {
@@ -113,6 +116,19 @@ namespace SimulationGaragistesDAL.Model
                 }
                 else
 	            {
+                    //Une chance sur 10 
+                    if (this.rand.Next(1,10) == 1)
+                    {
+                        List<Révisions> lRev;
+                        //test 
+                        using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+                        {
+                            lRev = context.Révisions.Where(r => r.modele_id == null).ToList();
+                        }
+
+                        Révisions rev = lRev.Skip(this.rand.Next(0,lRev.Count())).First();
+                        this.prochaineRevision = rev;
+                    }
                     if (this.prochaineRevision.km <= this.km + dayKm)
                     {
                         this.km = (int)this.prochaineRevision.km;
@@ -142,13 +158,18 @@ namespace SimulationGaragistesDAL.Model
                     }
                     else
                     {
-                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure);
+                        repport = String.Format("{0} répare {1}  du {2} - {3}H, jusqu'au {4} - {5}H {6}", vm.VMGaragiste, this, vm.Debut.Jour, vm.Debut.Heure, vm.Fin.Jour, vm.Fin.Heure,this.prochaineRevision.label);
                         this.nbJoursArrets = vm.Fin.Jour - indexJour;
                         this.prochaineRevision = this.getProchaineRevision();
                     }
                 }
             }
             return repport;
+        }
+
+        private VMIntervention reparePanne(Panne panne, int indexJour, List<VMGaragiste> lVMGaragistes)
+        {
+            throw new NotImplementedException();
         }
 
         private VMIntervention chercherIntervention(Révisions revision,int indexJour,List<VMGaragiste> lVMGaragistes)
@@ -182,44 +203,6 @@ namespace SimulationGaragistesDAL.Model
                         }
                     }
                 }
-                /*
-                //Si le garagiste n'est pas en vacances
-                if(!vmGaragiste.estEnVacances(indexJour))
-                {
-                    if (!founded)
-                    {
-                        //Si premier passage dans la boucle 
-                        if (plusTot.Heure == -1)
-                        {
-                            garagisteChoisi = vmGaragiste;
-                            plusTot = vmGaragiste.getProchaineDispo();
-                            //Si premier RDV de la journée, pas mieux 
-                            if (vmGaragiste.getProchaineDispo().Jour < indexJour)
-                            {
-                                plusTot.Jour = indexJour;
-                                founded = true;
-                            }
-                        }
-                        else
-                        {
-                            // Si le jour est plus tot ou équal
-                            if (vmGaragiste.getProchaineDispo().Jour <= plusTot.Jour)
-                            {
-                                //Si l'heure est plus tot -> meilleur cas 
-                                if (vmGaragiste.getProchaineDispo().Heure < plusTot.Heure)
-                                {
-                                    garagisteChoisi = vmGaragiste;
-                                    plusTot = vmGaragiste.getProchaineDispo();
-                                    if (vmGaragiste.getProchaineDispo().Jour < indexJour)
-                                    {
-                                        plusTot.Jour = indexJour;
-                                        founded = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }*/
             }
 
             if (garagisteChoisi.Garagiste.id != 0)

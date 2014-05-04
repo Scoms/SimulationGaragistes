@@ -1,0 +1,10 @@
+﻿@model SimulationGaragistes.ViewModels.VMSimulationData
+
+<h1>AddPanes</h1>
+
+<h1>Simulation</h1>
+
+@using (Html.BeginForm("runSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <input type="submit" name="runSimulation" value="Go !" />
+}

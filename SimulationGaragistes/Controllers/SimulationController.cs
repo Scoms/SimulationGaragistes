@@ -4,6 +4,7 @@ using SimulationGaragistesDAL.Model;
 using SimulationGaragistesDAL.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -51,8 +52,7 @@ namespace SimulationGaragistes.Controllers
             return View(vmSimu);
         }
 
-        [HttpPost]
-        public ActionResult startSimulation(VMSimulation pVmSimu)
+        public VMSimulationData prepareSimulationData(VMSimulation pVmSimu)
         {
             VMSimulationData vmSimuData = new VMSimulationData();
 
@@ -67,17 +67,17 @@ namespace SimulationGaragistes.Controllers
                 // Concern a garagiste
                 if (item.StartsWith(sGaragiste))
                 {
-                    if(val.StartsWith("true"))
+                    if (val.StartsWith("true"))
                     {
-                        garagistesIds.Add(int.Parse(item.Substring(sGaragiste.Length,item.Length - sGaragiste.Length)));
+                        garagistesIds.Add(int.Parse(item.Substring(sGaragiste.Length, item.Length - sGaragiste.Length)));
                     }
                 }
                 else if (item.ToString().StartsWith(sModele))
                 {
                     int[] row = new int[2];
-                    row[0] = int.Parse(item.Substring(sModele.Length,item.Length - sModele.Length));
+                    row[0] = int.Parse(item.Substring(sModele.Length, item.Length - sModele.Length));
                     row[1] = int.Parse(val);
-                    if(row[1] >= 0)
+                    if (row[1] >= 0)
                         modelesQuantity.Add(row);
                 }
                 var x = item;
@@ -105,16 +105,24 @@ namespace SimulationGaragistes.Controllers
             {
                 Modeles modele = serviceModele.findById(item[0]);
                 for (int i = 1; i <= item[1]; i++)
-			    {
-                    Voiture voiture = new Voiture(modele,i);
+                {
+                    Voiture voiture = new Voiture(modele, i);
                     vmSimuData.lVoitures.Add(voiture);
-			    }
+                }
             }
 
             vmSimuData.nom = pVmSimu.nom == String.Empty ? "sanstitre" : pVmSimu.nom;
-
-
-            return runSimulation(vmSimuData);
+            return vmSimuData;
+        }
+        
+        [HttpPost]
+        public ActionResult startSimulation(VMSimulation vmSimu)
+        {
+            VMSimulationData vmSimuData = prepareSimulationData(vmSimu);
+            //this.Session["vmSimuData"] = vmSimuData;
+            //return View(vmSimuData.lVoitures);
+            List<VMSimulationData.DayRepport> lRepports = runSimulation(vmSimuData);
+            return View(lRepports);
         }
 
         private int enregistreStats(VMSimulationData vmSimuData)
@@ -153,8 +161,22 @@ namespace SimulationGaragistes.Controllers
             return simulation.id;
         }
 
-        public ActionResult runSimulation(VMSimulationData vmSimuData)
+        public List<VMSimulationData.DayRepport> runSimulation(VMSimulationData vmSimuData)
         {
+
+            var x = this.Request.Params;
+            vmSimuData.lPannes = new List<Panne>();
+            vmSimuData.lPannes = GetPannes(this.Request);
+
+            foreach (Panne panne in vmSimuData.lPannes)
+            {
+                Voiture voiture = vmSimuData.lVoitures.Where(v => v.id == panne.Voiture.modele.id).First();
+                if(voiture.lPannes == null){
+                    voiture.lPannes = new List<Panne>();
+                }
+                voiture.lPannes.Add(panne);
+            }
+
             List<VMSimulationData.DayRepport> lRepports = new List<VMSimulationData.DayRepport>();
             DateTime currentDate = vmSimuData.debut;
             Statistiques stat = new Statistiques();
@@ -201,7 +223,65 @@ namespace SimulationGaragistes.Controllers
             vmSimuData.statistiques = lStats;
             int simuid = enregistreStats(vmSimuData);
 
-            return RedirectToAction("Details", "Statistiques", new { id = simuid });
+            return lRepports;
+            //return RedirectToAction("Details", "Statistiques", new { id = simuid });
+        }
+
+        private List<Panne> GetPannes(HttpRequestBase httpRequestBase)
+        {
+            string panneString = "panne";
+            string nomString ="nom";
+            string dureeString ="duree";
+            string voitureString ="voiture";
+            string jourString = "jour";
+            List<Panne> lPannes = new List<Panne>();
+            NameObjectCollectionBase.KeysCollection keys = httpRequestBase.Params.Keys;
+            var Params = httpRequestBase.Params;
+            foreach (var item in keys)
+            {
+                if (item.ToString().StartsWith(panneString) && item.ToString().EndsWith(nomString))
+                {
+                    string sansPanne = item.ToString().Substring(panneString.Length,item.ToString().Length - panneString.Length);
+                    string idPanne = (sansPanne.Substring(0,sansPanne.Length - nomString.Length));
+                    var y = httpRequestBase.Params[item.ToString()];
+
+                    string voiture = httpRequestBase.Params[panneString + idPanne + voitureString];
+                    string voitureSansPF = voiture.Substring(0, voiture.Length - 1);
+                    int voitureID;
+                    string voitureIDString = (voitureSansPF.Substring(voitureSansPF.Length - 1, voiture.Length - voitureSansPF.Length));
+                    bool parsed = int.TryParse(voitureIDString,out voitureID);
+                    int i = 2;
+                    while(parsed){
+                        voitureIDString = (voitureSansPF.Substring(voitureSansPF.Length - i, voitureSansPF.Length - voitureSansPF.Length));
+                        parsed = int.TryParse(voitureIDString,out voitureID);
+                        i++;
+                    }
+
+
+                    //int voitureID = ;
+                    string marque;
+                    string modeleString;
+                    string[] voitureSplit;
+                    char[] separators = new char[]{' '};
+                    voitureSplit = voiture.Split(separators);
+                    //TEMP PEUT ETRE A REVOIR 
+                    marque = voitureSplit.First();
+                    modeleString = voitureSplit.Skip(1).First();
+                    modeleString = modeleString.Substring(0, modeleString.Length - 2 - voitureID.ToString().Length);
+                    ServiceModeles serviceModele = new ServiceModeles(new ErrorHandler());
+                    Modeles modele = serviceModele.Find(marque,modeleString);
+                    
+                    Panne panne = new Panne() { 
+                        Duree = int.Parse(Params[panneString + idPanne + dureeString]),
+                        IndexJour = int.Parse(Params[panneString + idPanne + jourString]),
+                        Voiture = new Voiture(modele,voitureID)
+                    };
+                    lPannes.Add(panne);
+                }
+            }
+
+
+            return lPannes;
         }
 
         [HttpGet]
@@ -248,8 +328,9 @@ namespace SimulationGaragistes.Controllers
                 }
             }
             vmSimuData.lVoitures = lVoiture;
-
-            return runSimulation(vmSimuData);
+            TempData["vmSimuData"] = vmSimuData;
+            List<VMSimulationData.DayRepport> lRepports = runSimulation(vmSimuData);
+            return View(lRepports);
             /**
              * TODO :
              *  

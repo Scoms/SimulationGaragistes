@@ -1,0 +1,71 @@
+﻿
+@model System.Collections.Generic.List<SimulationGaragistesDAL.Model.Voiture>
+
+<h1>Configurer les pannes</h1>
+
+@{
+    SelectList selectVoiture = new SelectList(Model);
+    /*foreach (var item in Model)
+	{
+		 SelectListItem selectItem = new SelectListItem(){Text = (item.modele.label + " " + item.id), Value = (item.modele.label + "_" + item.id)};
+	}*/
+}
+
+@Html.DropDownList("lVoitures", selectVoiture)
+<input id="pNom" type="text" name="name" value="" placeholder="nom" />
+<input id="pDuree" type="number" name="name" value="" placeholder="durée" />
+<input id="pJour" type="number" name="name" value="" placeholder="jour (index)" />
+<button id="btnAjouter">Ajouter</button>
+
+@using (Html.BeginForm("runSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal", id = "formPost" }))
+{
+    <table id="tablePost"></table>
+    <input type="submit" name="runSimulation" value="Go !" />
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //add them to the DOM
+        //$('#formPost').prepend($node);
+        //remove a textfield
+        //$('#formPost').on('click', '.removeVar', function(){
+        //    $(this).parent().remove();
+        //});
+        //add a new node
+        //$('#addVar').on('click', function () {
+        //    varCount++;
+        //    $node = '<p><label for="var' + varCount + '">Variable ' + varCount + ': </label><input type="text" name="var' + varCount + '" id="var' + varCount + '"><span class="removeVar">Remove Variable</span></p>';
+        //    $(this).parent().before($node);
+        // });
+        var i = 1;
+        $("#btnAjouter").click(function (e) {
+            e.preventDefault();
+            var voiture = $("#lVoitures").val();
+            var nom = $("#pNom").val();
+            var duree = $("#pDuree").val();
+            var jour = $("#pJour").val();
+            if (duree == "") {
+                alert("Durée invalide");
+                return 0;
+            }
+            if (jour == "") {
+                alert("Jour invalide");
+                return 0;
+            }
+            var $node = "";
+            $node += '<input type="text" name="panne' + i + 'voiture" value="' + voiture + '"    >';
+            $node += "<input id='panne" + i + "nom' name='panne" + i + "nom' value='" + nom + "' >";
+            $node += "<input id='panne" + i + "duree' name='panne" + i + "duree' value='" + duree + "' >";
+            $node += "<input id='panne" + i + "jour' name='panne" + i + "jour' value='" + jour + "' >";
+            $node += "<button id='btnpanne" + i + "'>supprimer</button><br/>";
+            i++;
+
+            $('#formPost').prepend($node);
+
+            $("#btnpanne" + i).click(function (e) {
+                e.preventDefault();
+            });
+        })
+    })
+</script>

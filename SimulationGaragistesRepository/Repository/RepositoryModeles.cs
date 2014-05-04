@@ -48,5 +48,13 @@ namespace SimulationGaragistesRepository.Repository
                 return context.Modeles.Include("Marques").Include("Révisions").Where(m => m.id == id).FirstOrDefault();
             }
         }
+
+        public Modeles Find(string marque, string modeleString)
+        {
+            using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
+            {
+                return context.Modeles.Include("Marques").Include("Révisions").Where(m => m.label.Equals(modeleString) && m.Marques.label.Equals(marque)).FirstOrDefault();
+            }
+        }
     }
 }
