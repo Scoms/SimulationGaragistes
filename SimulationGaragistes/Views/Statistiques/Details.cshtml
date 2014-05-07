@@ -31,7 +31,7 @@
                         }
                     </td>
                     <td>
-                        @item.Révisions.label @item.Révisions.km
+                        @item.Révisions.label @(item.Révisions.modele_id == null ? "(aléatoire)" : item.Révisions.km.ToString())
                     </td>
                     <td>
                         @Model.Simulation.Statistiques.Where(s => s.revision_id == item.revision_id && s.garagiste_id == item.garagiste_id).Count()
