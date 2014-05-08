@@ -27,5 +27,5 @@
         defaultStatus: 'Choisir la date',
         isRTL: false
     };
-    $.extend($.ui.datepicker.defaults, $.ui.datepicker.regional['fr']);
+    $.extend($.datepicker.defaults, $.datepicker.regional['fr']);
 })(jQuery);

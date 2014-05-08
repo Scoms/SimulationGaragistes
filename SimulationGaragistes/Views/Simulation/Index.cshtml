@@ -1,6 +1,13 @@
 ﻿@model SimulationGaragistes.ViewModels.VMSimulation
 
-<h1>Simulation</h1>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1>Simulation</h1>
+    </div>
+    <div class="panel-body">
+        <p>Ici vous pouvez lancer une simulation avec tout les paramètres enregistrés dans la base de données.</p>
+    </div>
+</div>
 
 @using (Html.BeginForm("startSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal" }))
 {

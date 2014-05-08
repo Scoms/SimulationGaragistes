@@ -11,7 +11,7 @@ namespace SimulationGaragistes
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.10.2.min.js",
                         "~/Scripts/jquery-ui-1.10.4.custom.min.js",
-                        "~/Scripts/datepicker_fr.js"
+                        "~/Scripts/jquery.ui.datepicker-fr.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

@@ -25,8 +25,9 @@
         String rootPath = Server.MapPath("~/Logs/");
         String path = (rootPath + item.nom);
         string src = path;
-                }
-                <a href="@src">fichier</a>
+        src = "/Logs/" + item.nom + ".txt";
+                }     
+                <a href="@(src)">fichier</a>
             </td>
             <td>
                 @item.created

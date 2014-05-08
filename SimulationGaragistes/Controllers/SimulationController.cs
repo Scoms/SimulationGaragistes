@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -203,14 +204,18 @@ namespace SimulationGaragistes.Controllers
 
             //écriture dans le fichier
             String rootPath = Server.MapPath("~");
-            FileStream fichier = System.IO.File.Create(rootPath + filePath + vmSimuData.nom);
+            FileStream fichier = System.IO.File.Create(rootPath + filePath + vmSimuData.nom + ".txt");
             fichier.Close();
-            StreamWriter file = new StreamWriter(rootPath + filePath + vmSimuData.nom,true);
+            StreamWriter file = new StreamWriter(new FileStream(rootPath + filePath + vmSimuData.nom + ".txt",FileMode.OpenOrCreate,FileAccess.ReadWrite) , Encoding.UTF8);
             file.Flush();
             int i2 = 0;
+            var french = new System.Globalization.CultureInfo("FR-fr");
+            var info = french.DateTimeFormat;
+           
             foreach (var repport in lRepports)
             {
-                file.WriteLine(repport.indexJour + " " + repport.jour.AddDays(i2).DayOfWeek);
+                string jourSemaine = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(repport.jour.AddDays(i2).DayOfWeek);
+                file.WriteLine(repport.indexJour + " " + jourSemaine);
                 foreach (var evenement in repport.evenements)
                 {
                    file.WriteLine("  " + evenement);    
@@ -294,7 +299,7 @@ namespace SimulationGaragistes.Controllers
 
             //Durée
             vmSimuData.debut = DateTime.Now.AddDays(1);
-            vmSimuData.nbJours = 100;
+            vmSimuData.nbJours = 10;
             vmSimuData.nom = "demo";
             
             //1 garagiste
@@ -321,7 +326,7 @@ namespace SimulationGaragistes.Controllers
             lModeles.Add(serviceModele.findAll(new List<string>(){"Révisions","Marques"}).FirstOrDefault());
             foreach (var item in lModeles)
             {
-                for (int i = 1; i <= 100; i++)
+                for (int i = 1; i <= 10; i++)
                 {
                     Voiture voiture = new Voiture(item, i,119999);
                     lVoiture.Add(voiture);
