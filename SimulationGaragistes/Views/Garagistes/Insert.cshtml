@@ -10,9 +10,15 @@
     @TempData["message"]
     @Html.Hidden("id",Model.Garagiste.id)
     @Html.Label("nom")
-    @Html.TextBox("nom", Model.Garagiste.nom)
-    @Html.DropDownList("franchise",Model.lFranchises)
+    <div class="input-group">
+        @Html.TextBox("nom", Model.Garagiste.nom, new { @class = "form-control" })
+    </div>
+    <br />
+    <div class="input-group">
+     @Html.DropDownList("franchise", Model.lFranchises, new { @class = "btn dropdown-toggle" })
+    </div> 
+    <br />
     
     string mod = Model.Garagiste.id <= 0 ? "Ajouter" : "Modifier";
-    <input type="submit" value=@mod>
+    <input type="submit" class="btn btn-default" value=@mod>
 }

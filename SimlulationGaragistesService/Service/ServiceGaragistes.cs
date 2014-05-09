@@ -22,7 +22,7 @@ namespace SimlulationGaragistesService.Service
         {
             if (obj.nom == null)
             {
-                this._eh.addError("Le garagiste doit avoir un nom, comme toute personne normal d'ailleurs.");
+                this._eh.addError("Le garagiste doit avoir un nom, comme toute personne normale d'ailleurs.");
             }
         }
 

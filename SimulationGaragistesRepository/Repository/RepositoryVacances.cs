@@ -28,23 +28,30 @@ namespace SimulationGaragistesRepository.Repository
 
                 foreach (var item in lVacances)
                 {
-                    if (item.debut <= obj.debut || obj.debut <= obj.fin)
+                    if (item.debut <= obj.debut && obj.debut <= item.fin)
                     {
                         this._eh.addError("La date de début se trouve pendant des vacances");
                     }
-                    if (item.debut <= obj.fin || obj.fin <= obj.fin)
+                    if (item.debut <= obj.fin && obj.fin <= item.fin)
                     {
                         this._eh.addError("La date de fin se trouve pendant des vacances");
                     }
-                    if (obj.debut <= item.debut || item.debut <= obj.fin)
+                    if (obj.debut <= item.debut && item.debut <= obj.fin)
                     {
-                        this._eh.addError("Les vacances spécifiées en englode d'autres.");
+                        this._eh.addError("Les vacances spécifiées en englode d'autres");
+                    }
+                    if (obj.debut >= obj.fin)
+                    {
+                        this._eh.addError("Les dates ne sont pas cohérentes");
                     }
                 }
 
-                context.Garagistes.Attach(garagiste);
-                context.Vacances.Add(obj);
-                context.SaveChanges();
+                if (!_eh.hasErrors())
+                {
+                    context.Garagistes.Attach(garagiste);
+                    context.Vacances.Add(obj);
+                    context.SaveChanges();
+                }
             }
         }
 

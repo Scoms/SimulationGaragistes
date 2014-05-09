@@ -29,15 +29,17 @@
         @using (Html.BeginForm("addVacance", "Garagistes", FormMethod.Post))
         {
             @Html.HiddenFor(m => Model.Vacance.garagiste_id)
-            <td>@Html.TextBox("Vacance.debut", Model.Vacance.debut.ToShortDateString(), new { @class = "datepicker" })</td>
-            <td>@Html.TextBox("Vacance.fin", Model.Vacance.fin.ToShortDateString(), new { @class = "datepicker" })</td>
-            <td><input type="submit" name="submit" value="Ajouter" /></td>
+            <td>@Html.TextBox("Vacance.debut", Model.Vacance.debut.ToShortDateString(), new { @class = "datepicker form-control" })</td>
+            <td>@Html.TextBox("Vacance.fin", Model.Vacance.fin.ToShortDateString(), new { @class = "datepicker form-control" })</td>
+            <td><input type="submit" name="submit" value="Ajouter" class="btn btn-default"/></td>
         }
 
     </tr>
 </tableclass>
-
+<p>
 @Html.ValidationMessage("error")
+
+</p>
 
 <script type="text/javascript">
     $(document).ready(function () {

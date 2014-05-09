@@ -165,7 +165,7 @@ namespace SimulationGaragistes.Controllers
         }
 
         [HttpGet]
-        public ActionResult ConfigureVacances(int id)
+        public ActionResult ConfigureVacances(int id, string errors = "-1")
         {
             ErrorHandler eh = new ErrorHandler();
             ServiceGaragistes service = new ServiceGaragistes(eh);
@@ -175,11 +175,18 @@ namespace SimulationGaragistes.Controllers
             Vacances vacance = new Vacances();
             vacance.garagiste_id = id;
             vm.Vacance = vacance;
+            vm.Vacance.debut = DateTime.Now;
+            vm.Vacance.fin = DateTime.Now.AddDays(1);
 
             if (garagiste == null)
             {
                 return RedirectToAction("Index");
             }
+            if(!errors.Equals("-1"))
+            {
+                ModelState.AddModelError("error", errors);
+            }
+            
 
             return View(vm);
         }
@@ -190,11 +197,8 @@ namespace SimulationGaragistes.Controllers
             ErrorHandler eh = new ErrorHandler();
             ServiceVacances service = new ServiceVacances(eh);
             service.Insert(vacance);
-            if (eh.hasErrors())
-            {
-                this.ModelState.AddModelError("error", eh.getErrors());
-            }
-            return RedirectToAction("ConfigureVacances", new { id = vacance.garagiste_id });
+            
+            return RedirectToAction("ConfigureVacances", new { id = vacance.garagiste_id , errors = eh.getErrors()});
 
         }
 
