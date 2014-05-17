@@ -18,7 +18,6 @@ namespace SimulationGaragistesDAL.Model
         {
             this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
             this.Vacances = new HashSet<Vacances>();
-            this.Statistiques = new HashSet<Statistiques>();
         }
     
         public int id { get; set; }
@@ -28,6 +27,5 @@ namespace SimulationGaragistesDAL.Model
         public virtual Franchises Franchises { get; set; }
         public virtual ICollection<Revisions_Garagistes> Revisions_Garagistes { get; set; }
         public virtual ICollection<Vacances> Vacances { get; set; }
-        public virtual ICollection<Statistiques> Statistiques { get; set; }
     }
 }

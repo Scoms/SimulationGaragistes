@@ -1,19 +1,41 @@
-﻿<h1>Ajouter une révision</h1>
-
-@model SimulationGaragistesDAL.Model.Révisions
+﻿@model SimulationGaragistesDAL.Model.Révisions
 @Html.Partial("Menu")
-<div>
-    @TempData["success"]
+<div class=" col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Ajouter/Modifier une révision</h1>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
+            {
+                @Html.ValidationMessage("error")
+                @Html.Hidden("id", Model.id)
+                <div class="input-group" style="width:auto;">
+                    @Html.TextBox("label", Model.label, new { @class = "form-control" })
+                </div>
+                <br />
+                @Html.Hidden("modele_id", Model.modele_id)
+                <div class="input-group"    >
+                @Html.TextBox("km", Model.km == 0 ? 1 : Model.km, new { @class = "form-control" })
+                </div>
+                <br />
+                <div class="input-group">
+                    @Html.TextBox("defaultTime", Model.defaultTime == 0 ? 1 : Model.defaultTime, new { @class = "form-control" })
+                </div>
+                <br />
+                string mod = Model.id == 0 ? "Ajouter" : "Modifier";
+                <input type="submit" class="btn btn-default" value="@mod" />
+            }
+        </div>
+    </div>
 </div>
-@using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
-{
-    @Html.ValidationMessage("error")
-    @Html.Hidden("id", Model.id)
-    @Html.Hidden("modele_id", Model.modele_id)
-    @Html.TextBox("label", Model.label)
-    @Html.TextBox("km", Model.km == 0 ? 1 : Model.km)
-    @Html.TextBox("defaultTime", Model.defaultTime == 0 ? 1 : Model.defaultTime)
-
-    string mod = Model.id == 0 ? "Ajouter" : "Modifier";
-    <input type="submit" value="@mod" />
-}
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
+    }
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

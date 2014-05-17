@@ -99,7 +99,9 @@ namespace SimulationGaragistes.Controllers
 
             foreach (var item in garagistesIds)
             {
-                vmSimuData.lVMGaragistes.Add(new VMGaragiste(serviceGaragiste.findById(item)));
+                VMGaragiste vmGaragiste = new VMGaragiste(serviceGaragiste.findById(item));
+                vmGaragiste.activerVacances(pVmSimu.dateStart, pVmSimu.nbJours);
+                vmSimuData.lVMGaragistes.Add(vmGaragiste);
             }
 
             foreach (var item in modelesQuantity)
@@ -156,7 +158,10 @@ namespace SimulationGaragistes.Controllers
                 Statistiques stat = new Statistiques();
                 stat.simulation_id = simulation.id;
                 stat.garagiste_id = item.Garagiste.id;
-                stat.revision_id = null;
+                stat.revision_id = -1;
+                stat.revision = "";
+                stat.voiture = "";
+                stat.garagiste = item.Garagiste.nom + "("+item.Garagiste.Franchises.label+")";
                 serviceStatistiques.Insert(stat);
             }
             return simulation.id;
@@ -164,7 +169,8 @@ namespace SimulationGaragistes.Controllers
 
         public List<VMSimulationData.DayRepport> runSimulation(VMSimulationData vmSimuData)
         {
-
+            ErrorHandler eh = new ErrorHandler();
+            ServiceGaragistes serviceGar = new ServiceGaragistes(eh);
             var x = this.Request.Params;
             vmSimuData.lPannes = new List<Panne>();
             vmSimuData.lPannes = GetPannes(this.Request);
@@ -197,7 +203,12 @@ namespace SimulationGaragistes.Controllers
 
                     if(stat != null)
                         if(stat.garagiste_id != 0)
+                        {
+                            VMGaragiste vmGara = new VMGaragiste(serviceGar.findById(stat.garagiste_id));
+                            vmGara.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
+                            stat.nbvacances = vmGara.IndexVacances.Where(v => v > 0 && v <= vmSimuData.nbJours).Count();
                             lStats.Add(stat);
+                        }
                 }
                 lRepports.Add(repport);
             }

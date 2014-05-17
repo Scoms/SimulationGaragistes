@@ -32,13 +32,15 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Simulation Garagistes</p>
-        </footer>
-    </div>
+    <div class="">
+
+        <div class="row well">
+            @RenderBody()
+            </div>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Simulation Garagistes</p>
+            </footer>
+        </div>
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

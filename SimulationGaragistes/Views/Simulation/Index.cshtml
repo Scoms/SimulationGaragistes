@@ -1,80 +1,96 @@
 ﻿@model SimulationGaragistes.ViewModels.VMSimulation
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h1>Simulation</h1>
+<div class="container body-content">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1>Simulation</h1>
+        </div>
+        <div class="panel-body">
+            <p>Ici vous pouvez lancer une simulation avec tout les paramètres enregistrés dans la base de données.</p>
+        </div>
     </div>
-    <div class="panel-body">
-        <p>Ici vous pouvez lancer une simulation avec tout les paramètres enregistrés dans la base de données.</p>
-    </div>
+
+    @using (Html.BeginForm("startSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h2>Durée</h2>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.Label("nom", "Nom : ", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBox("nom", Model.nom, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("nbJours", "Durée : ", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBox("nbJours", Model.nbJours, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("dateStart", "Début : ", new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBox("dateStart", Model.dateStart, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2>Garagistes</h2>
+            </div>
+            <div class="panel-body">
+                <div id="divGaragistes">
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Garagiste</th>
+                            <th>Franchise</th>
+                            <th></th>
+                        </tr>
+                        @{
+                            foreach (var item in Model.GaragistesConfs)
+                            {
+                                <tr>
+                                    <td>@item.Garagiste.nom</td>
+                                    <td>@item.Garagiste.Franchises.label</td>
+                                    <td>@Html.CheckBox("garagiste" + item.Garagiste.id, @item.Comfirmed)</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div> 
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h2>Voitures</h2>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Marque</th>
+                        <th>Nombre</th>
+                    </tr>
+                    @{
+                        foreach (var item in Model.ModelesConfs)
+                        {
+                            <tr>
+                                <td>@item.Modele.label</td>
+                                <td>@item.Modele.Marques.label</td>
+                                <td>@Html.TextBox("modele" + item.Modele.id, item.Quantite, new { @class = "form-control" })</td>
+                            </tr>
+                        }
+                    }
+                </table>
+                <input type="submit" class="btn btn-primary btn-lg col-md-offset-5 col-md-2" name="startSimulation" value="Go !" />
+            </div>
+        </div>
+    }
 </div>
 
-@using (Html.BeginForm("startSimulation", "Simulation", FormMethod.Post, new { @class = "form-horizontal" }))
-{
-
-    <h2>Durée</h2>
-    <div class="form-group">
-        @Html.Label("nom", "Nom : ", new { @class = "col-sm-2 control-label" })
-        <div class="col-sm-10">
-            @Html.TextBox("nom", Model.nom, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.Label("nbJours","Durée : ",new { @class = "col-sm-2 control-label" })
-        <div class="col-sm-10">
-            @Html.TextBox("nbJours", Model.nbJours,new { @class = "form-control" })
-        </div>
-    </div>
-        <div class="form-group">
-        @Html.Label("dateStart","Début : ", new { @class = "col-sm-2 control-label" })
-        <div class="col-sm-10">
-            @Html.TextBox("dateStart", Model.dateStart, new { @class = "form-control" })
-        </div>
-    </div>
-
-    <div id="divGaragistes">
-
-        <h2>Garagistes</h2>
-
-        <table class="table table-striped">
-            <tr>
-                <th>Garagiste</th>
-                <th>Franchise</th>
-                <th></th>
-            </tr>
-            @{
-    foreach (var item in Model.GaragistesConfs)
-    {
-        <tr>
-            <td>@item.Garagiste.nom</td>
-            <td>@item.Garagiste.Franchises.label</td>
-            <td>@Html.CheckBox("garagiste" + item.Garagiste.id, @item.Comfirmed)</td>
-        </tr>
-    }
-            }
-        </table>
-
-            </div>
-            <h2>Voitures</h2>
-    <table class="table table-striped">
-        <tr>
-            <th>Modèle</th>
-            <th>Marque</th>
-            <th>Nombre</th>
-        </tr>
-        @{
-    foreach (var item in Model.ModelesConfs)
-    {
-        <tr>
-            <td>@item.Modele.label</td>
-            <td>@item.Modele.Marques.label</td>
-            <td>@Html.TextBox("modele" + item.Modele.id, item.Quantite, new { @class = "form-control" })</td>
-        </tr>
-    }
-        }
-    </table>
-    <input type="submit" class="btn btn-default" name="startSimulation" value="Go !" />
-}
 
     <script type="text/javascript">
         $(document).ready(function () {

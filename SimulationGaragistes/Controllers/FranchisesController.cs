@@ -39,7 +39,7 @@ namespace SimulationGaragistes.Controllers
                 fran = this._service.findById(id);
                 if (fran == null)
                 {
-                    ModelState.AddModelError("error", "La franchise demandée n'existe pas.");
+                    TempData["error"] = "La franchise demandée n'existe pas.";
                     return View(new Franchises());
                 }
             }
@@ -66,10 +66,10 @@ namespace SimulationGaragistes.Controllers
 
             if (this._eh.hasErrors())
             {
-                ModelState.AddModelError("error", this._eh.getErrors());
+                TempData["error"] = this._eh.getErrors();
                 return View(fran);
             }
-            TempData["message"] = message;
+            TempData["success"] = message;
             return RedirectToAction("Insert");
         }
 
@@ -78,7 +78,7 @@ namespace SimulationGaragistes.Controllers
             Franchises fran = this._service.findById(id);
             if (fran == null)
             {
-                ModelState.AddModelError("error", "La franchise spécifiée n'existe pas.");
+                TempData["error"] = "La franchise spécifiée n'existe pas.";
             }
             else
             {

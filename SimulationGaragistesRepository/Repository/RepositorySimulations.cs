@@ -33,7 +33,7 @@ namespace SimulationGaragistesRepository.Repository
         {
             using (SimulationGaragistesEntities context = new SimulationGaragistesEntities())
             {
-                return context.Simulations.Include("Statistiques").Include("Statistiques.Révisions").Include("Statistiques.Garagistes").Include("Statistiques.Garagistes.Franchises").Include("Statistiques.Garagistes.Vacances").Where(m => m.id == id).FirstOrDefault();
+                return context.Simulations.Include("Statistiques").Where(m => m.id == id).FirstOrDefault();
             }
         }
     }

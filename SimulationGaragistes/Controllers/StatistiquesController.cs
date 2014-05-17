@@ -26,31 +26,41 @@ namespace SimulationGaragistes.Controllers
         {
             ErrorHandler eh = new ErrorHandler();
             ServiceSimulations service = new ServiceSimulations(eh);
+            ServiceRévisions serviceRev = new ServiceRévisions(eh);
+            ServiceGaragistes serviceGar = new ServiceGaragistes(eh);
             VMStatistiques vm = new VMStatistiques();
             vm.Simulation = service.findById(id);
-            vm.lGaragistesLibres = new List<Garagistes>();
+            vm.lGaragistesLibres = new List<string>();
+            List<string> lGaragistesOccu = new List<string>();
 
 
             List<VMStatistiques.OccupationGaragiste> occupations = new List<VMStatistiques.OccupationGaragiste>();
             foreach (var item in vm.Simulation.Statistiques)
 	        {
-                if (item.revision_id != null)
+                if (item.revision_id != -1)
                 {
                     //VMStatistiques.OccupationGaragiste prevRow = occupations.Find(o => o.Garagiste.id == item.garagiste_id);
-                    VMStatistiques.OccupationGaragiste prevRow = occupations.Find(o => o.Garagiste.id == item.garagiste_id);                    
-                    int duree = this.getDureeRevision(item.garagiste_id, (int)item.revision_id);
-                    duree = duree == -1 ? item.Révisions.defaultTime : duree;
+                    VMStatistiques.OccupationGaragiste prevRow = occupations.Find(o => o.Garagiste_id == item.garagiste_id);
+                    int duree = 0;
+                    if (item.duree != null)
+                    {
+                        duree = (int)item.duree;
+                    }
+                    duree = duree == -1 ? serviceRev.findById(item.revision_id).defaultTime : duree;
 
                     //si le garagiste n'est pas encore rentré
                     if (prevRow == null)
                     {
                         prevRow = new VMStatistiques.OccupationGaragiste();
+                        prevRow.Garagiste_id = item.garagiste_id;
                         prevRow.Interventions = 1;
-                        prevRow.Garagiste = item.Garagistes;
+                        //prevRow.Garagiste = item.Garagistes;
                         prevRow.DureeTotal = duree;
-                        VMGaragiste vmGaragiste = new VMGaragiste(item.Garagistes);
-                        vmGaragiste.activerVacances((DateTime)vm.Simulation.debut, (int)vm.Simulation.duree);
-                        prevRow.JourTravailles = (int)vm.Simulation.duree - vmGaragiste.IndexVacances.Count();
+                        prevRow.Garagiste = item.garagiste;
+                        //VMGaragiste vmGaragiste = new VMGaragiste(serviceGar.findById(item.garagiste_id));
+                        //vmGaragiste.activerVacances((DateTime)vm.Simulation.debut, (int)vm.Simulation.duree);
+                        //List<int> indexVacances = vmGaragiste.IndexVacances.Where(v => v > (int)vm.Simulation.duree).ToList();
+                        prevRow.JourTravailles = (int)vm.Simulation.duree - item.nbvacances;
                         occupations.Add(prevRow);
                     }
                     else
@@ -59,12 +69,9 @@ namespace SimulationGaragistes.Controllers
                         prevRow.DureeTotal += duree;
                     }
                 }
-                else
-                {
-                    vm.lGaragistesLibres.Add(item.Garagistes);
-                }
 	        }
 
+            
             vm.Occupations = occupations;
             return View(vm);
         }

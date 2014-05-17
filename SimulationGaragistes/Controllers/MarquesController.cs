@@ -33,7 +33,7 @@ namespace SimulationGaragistes.Controllers
                 marque = service.findById(id);
                 if (marque == null)
                 {
-                    ModelState.AddModelError("error", "La marque spécifiée n'existe pas");
+                    TempData["error"] = "La marque spécifiée n'existe pas";
                     marque = new Marques();
                 }
             }
@@ -61,7 +61,7 @@ namespace SimulationGaragistes.Controllers
 
             if (eh.hasErrors())
             {
-                ModelState.AddModelError("error", eh.getErrors()); 
+                TempData["error"] = eh.getErrors();
                 return View(marque);
             }
             TempData["success"] = message;

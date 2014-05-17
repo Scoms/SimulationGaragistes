@@ -1,5 +1,10 @@
 ﻿@model SimulationGaragistes.ViewModels.VMStatistiques
-
+@{
+    Utils.ErrorHandler eh = new Utils.ErrorHandler();
+    SimlulationGaragistesService.Service.ServiceGaragistes serviceGar = new SimlulationGaragistesService.Service.ServiceGaragistes(eh);
+    SimlulationGaragistesService.Service.ServiceRévisions serviceRev = new SimlulationGaragistesService.Service.ServiceRévisions(eh);
+            
+}
 
 <table class="table table-striped">
     <tr>
@@ -18,7 +23,7 @@
         SimulationGaragistesDAL.Model.Statistiques prevItem = new SimulationGaragistesDAL.Model.Statistiques();   
        foreach (var item in Model.Simulation.Statistiques.OrderBy(s => s.garagiste_id).ThenBy(s => s.revision_id))
         {
-            if (item.Révisions != null)
+            if (item.revision_id != -1)
             {
                 if (item.revision_id != prevItem.revision_id || item.garagiste_id != prevItem.garagiste_id)
                 {
@@ -26,25 +31,17 @@
                     <td>
                         @if (item.garagiste_id != prevItem.garagiste_id)
                         {
-                            string res = item.Garagistes.nom + "(" + item.Garagistes.Franchises.label +")";
+                            string res =  item.garagiste;
                             <div>@res</div>
                         }
                     </td>
                     <td>
-                        @item.Révisions.label @(item.Révisions.modele_id == null ? "(aléatoire)" : item.Révisions.km.ToString())
+                        @item.revision @(item.km == 0 ? "(aléatoire)" : item.km.ToString())
                     </td>
                     <td>
                         @Model.Simulation.Statistiques.Where(s => s.revision_id == item.revision_id && s.garagiste_id == item.garagiste_id).Count()
                     </td>
                       </tr>  
-                    try
-                    {
-                        Model.lGaragistesLibres.Remove(item.Garagistes);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
                 }
                 prevItem = item;
             }
@@ -78,8 +75,7 @@
         {
             <tr>
                 <td>
-                    @item.Garagiste.nom (@item.Garagiste.Franchises.label)
-
+                    @item.Garagiste
                 </td>
                 <td>
                     @item.Interventions
@@ -100,14 +96,3 @@
             </tr>
         }
     </table>
-    <p>
-        Les garagistes suivants n'ont enregistrés aucune reservations :
-        @{
-            <ol>
-                @foreach (var item in Model.lGaragistesLibres)
-                {
-                    <li>@item.nom (@item.Franchises.label)</li>
-                }
-            </ol>
-        }    
-</p>

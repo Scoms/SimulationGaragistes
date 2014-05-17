@@ -25,14 +25,14 @@ namespace SimulationGaragistesDAL.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<Garagistes> Garagistes { get; set; }
         public DbSet<Franchises> Franchises { get; set; }
+        public DbSet<Garagistes> Garagistes { get; set; }
         public DbSet<Marques> Marques { get; set; }
         public DbSet<Modeles> Modeles { get; set; }
         public DbSet<Révisions> Révisions { get; set; }
         public DbSet<Revisions_Garagistes> Revisions_Garagistes { get; set; }
-        public DbSet<Vacances> Vacances { get; set; }
         public DbSet<Simulations> Simulations { get; set; }
         public DbSet<Statistiques> Statistiques { get; set; }
+        public DbSet<Vacances> Vacances { get; set; }
     }
 }

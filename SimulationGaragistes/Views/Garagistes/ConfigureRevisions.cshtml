@@ -1,39 +1,67 @@
 ﻿@model SimulationGaragistes.ViewModels.VMRevisions
-<h1>Choisir la révision à configurer</h1>
+@Html.Partial("Menu")
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Choisir la révision à configurer</h1>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Voiture</th>
+                    <th>Révision</th>
+                    <th>KM</th>
+                </tr>
+                @{
+                    foreach (var item in Model.lRevisions)
+                    {
+                        if (item.Modeles != null)
+                        {
+                            <tr>
+                                <td>@item.Modeles.Marques.label @item.Modeles.label</td>
+                                <td>@item.label </td>
+                                <td>@item.km</td>
+                                <td>@Html.TextBox("duree" + @item.id, @item.defaultTime)</td>
+                                <td><a id=@( @item.id) onclick="clicked(@item.id,@Model.idGaragiste)">Changer durée</a></td>
+                            </tr>
+                        }
+                    }
+                }
+            </table>
+        </div>
+    </div>
 
-
-@Html.ValidationMessage("error");
-<table class="table">
-    <tr>
-        <th>Voiture</th>
-        <th>Révision</th>
-        <th>KM</th>
-    </tr>
-    @{
-        foreach (var item in Model.lRevisions)
-        {
-            <tr>
-                <td>@item.Modeles.Marques.label @item.Modeles.label</td>
-                <td>@item.label </td>
-                <td>@item.km</td>
-                <td>@Html.TextBox("duree"+@item.id,@item.defaultTime)</td>
-                <td><a  id=@( @item.id) onclick="clicked(@item.id,@Model.idGaragiste)">Changer durée</a></td>
-            </tr>
-        }
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
     }
-</table>
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>
 
 <script type="text/javascript">
     function clicked(revId, garagiteId) {
         var duree = $("#duree" + revId).val();
-        var params = { idGaragiste: garagiteId, idRevision: revId, pDuree: duree }
-
-        var url = "/Garagistes/ChangeDureeRevision";//?idGaragiste=" + garagiteId + "&idRevision=" + revId + "&pDuree=" + duree;
         
-        $.ajax({
+        if (parseInt(duree) > 0 && $.isNumeric(duree))
+        {
+            var params = { idGaragiste: garagiteId, idRevision: revId, pDuree: duree }
+            var url = "/Garagistes/ChangeDureeRevision";//?idGaragiste=" + garagiteId + "&idRevision=" + revId + "&pDuree=" + duree;
+            $.ajax({
                 type: "GET",
                 url: url,
                 data: params
+            }).success(function () {
+                alert("La modification à été effectuée avec succès.");
             });
+        }
+        else {
+            alert("La durée '"+duree+"' n'est pas valide");
+        }
+        
     }
 </script>

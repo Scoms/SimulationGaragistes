@@ -1,19 +1,32 @@
 ﻿@model SimulationGaragistesDAL.Model.Franchises
-
-<h1>Ajouter une franchise</h1>
-
 @Html.Partial("Menu")
-
-<p>@TempData["success"]</p>
-<br />
-@using (Html.BeginForm("Insert","Franchises",FormMethod.Post) )
-{
-    @Html.ValidationMessage("error")
-    @TempData["message"]
-    @Html.Hidden("id", Model.id);
-    @Html.Label("label")
-    @Html.TextBox("label",Model.label)
-    
-    string mod = Model.id  <= 0 ? "Ajouter" : "Modifier";
-    <input type="submit" value=@mod>
-}
+<div class=" col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Ajouter une franchise</h1>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Insert", "Franchises", FormMethod.Post))
+            {
+                @Html.Hidden("id", Model.id);
+                @Html.Label("label")
+                <div class="input-group"    >
+                    @Html.TextBox("label", Model.label, new { @class = "form-control" })
+                </div>
+                <br />
+                string mod = Model.id <= 0 ? "Ajouter" : "Modifier";
+                <input type="submit" class="btn btn-default"  value=@mod>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
+    }
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

@@ -10,11 +10,12 @@ namespace SimulationGaragistes.ViewModels
     {
         public Simulations Simulation { get; set; }
         public List<OccupationGaragiste> Occupations { get; set; }
-        public List<Garagistes> lGaragistesLibres { get; set; }
+        public List<string> lGaragistesLibres { get; set; }
 
         public class OccupationGaragiste
         {
-            public Garagistes Garagiste { get; set; }
+            public int Garagiste_id { get; set; }
+            public string Garagiste { get; set; }
             public int JourTravailles { get; set; }
             public int Interventions { get; set; }
             public int DureeTotal { get; set; }

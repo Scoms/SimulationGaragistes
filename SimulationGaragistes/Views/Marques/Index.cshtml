@@ -1,21 +1,49 @@
-﻿<h1>Listes des Marques</h1>
-@model List<SimulationGaragistesDAL.Model.Marques>
+﻿@model List<SimulationGaragistesDAL.Model.Marques>
 @Html.Partial("Menu")
 
-<table class="table table-striped">
-    <tr>
-        <th>Marque</th>
-        <th></th>
-        <th></th>
-    </tr>
-    @{
-        foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.label</td>
-                <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
-                <td>@Html.ActionLink("supprimer", "Delete", new { id = item.id }, null)</td>
-            </tr>
-        }
+
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Listes des Marques</h1>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Marque</th>
+                    <th>Actions</th>
+                </tr>
+                @{
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.label</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-default" href="@Url.Action("Insert", "Marques", new { id = item.id })">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                </div>
+                                <div class="btn-group">
+                                    <a class="btn btn-danger" href="@Url.Action("Delete", "Marques", new { id = item.id })">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
     }
-</table>
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

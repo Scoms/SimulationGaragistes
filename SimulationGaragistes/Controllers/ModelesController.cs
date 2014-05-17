@@ -81,7 +81,7 @@ namespace SimulationGaragistes.Controllers
 
             if (eh.hasErrors())
             {
-                ModelState.AddModelError("error", eh.getErrors());
+                TempData["error"] = eh.getErrors();
             }
             else
             {
@@ -128,9 +128,9 @@ namespace SimulationGaragistes.Controllers
 
             vm.marqueLabel = vm.Modele.Marques.label;
             vm.Revision = new Révisions();
-            
-            if(errors !=null)
-                ModelState.AddModelError("error", errors);
+
+            if (errors != null)
+                TempData["error"] = errors;
             
             return View(vm);
         }

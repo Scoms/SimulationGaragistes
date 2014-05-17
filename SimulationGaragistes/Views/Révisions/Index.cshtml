@@ -1,24 +1,41 @@
-﻿<h1>Liste des révisions</h1>
-
-@model List<SimulationGaragistesDAL.Model.Révisions>
+﻿@model List<SimulationGaragistesDAL.Model.Révisions>
 @Html.Partial("Menu")
 
-<table class="table table-striped">
-    <tr>
-        <th>Révision</th>
-        <th>Durée par défault (en heure)</th>
-        <th></th>
-        <th></th>
-    </tr>
-    @{
-        foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.label</td>
-                <td>@item.defaultTime</td>
-                <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
-                <td>@Html.ActionLink("supprimer", "Delete", new { id = item.id }, null)</td>
-            </tr>
-        }
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Liste des révisions</h1>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Révision</th>
+                    <th>Durée par défault (en heure)</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                @{
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.label</td>
+                            <td>@item.defaultTime</td>
+                            <td>@Html.ActionLink("modifier", "Insert", new { id = item.id }, null)</td>
+                            <td>@Html.ActionLink("supprimer", "Delete", new { id = item.id }, null)</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
     }
-</table>
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

@@ -15,12 +15,17 @@ namespace SimulationGaragistesDAL.Model
     public partial class Statistiques
     {
         public int id { get; set; }
-        public Nullable<int> revision_id { get; set; }
+        public int revision_id { get; set; }
         public int garagiste_id { get; set; }
         public int simulation_id { get; set; }
+        public Nullable<int> duree { get; set; }
+        public string voiture { get; set; }
+        public string revision { get; set; }
+        public string garagiste { get; set; }
+        public int modele_id { get; set; }
+        public int km { get; set; }
+        public int nbvacances { get; set; }
     
-        public virtual Garagistes Garagistes { get; set; }
-        public virtual Révisions Révisions { get; set; }
         public virtual Simulations Simulations { get; set; }
     }
 }

@@ -85,7 +85,7 @@ namespace SimulationGaragistes.Controllers
 
             if (eh.hasErrors())
             {
-                ModelState.AddModelError("error", eh.getErrors());
+                TempData["error"] = eh.getErrors();
                 vm.Garagiste = garagiste;
                 vm.lFranchises = new List<SelectListItem>();
                 if (garagiste.Franchises != null)
@@ -100,7 +100,7 @@ namespace SimulationGaragistes.Controllers
                 }
                 return View(vm);
             }
-            TempData["message"] = message;
+            TempData["success"] = message;
             return RedirectToAction("Insert");
         }
 
@@ -110,7 +110,7 @@ namespace SimulationGaragistes.Controllers
             Garagistes garagiste = service.findById(id);
             if (garagiste == null)
             {
-                ModelState.AddModelError("error", "Le garagiste spécifié n'existe pas.");
+                TempData["error"] = "Le garagiste spécifié n'existe pas.";
             }
             else
             {
@@ -143,7 +143,6 @@ namespace SimulationGaragistes.Controllers
 
             vm.lRevisions = serviceGaragiste.GetRevisions(id);// serviceRevision.findAll(new List<string>() { "Modeles" });
             vm.idGaragiste = garagiste.id;
-
             return View(vm);
         }
 
@@ -159,7 +158,7 @@ namespace SimulationGaragistes.Controllers
             service.ChangeDureeRevision(revGar);
             if(eh.hasErrors())
             {
-                ModelState.AddModelError("error",eh.getErrors());
+                TempData["error"] = eh.getErrors();
             }
             return RedirectToAction("ConfigureRevisions", new {id = idGaragiste });
         }
@@ -184,7 +183,7 @@ namespace SimulationGaragistes.Controllers
             }
             if(!errors.Equals("-1"))
             {
-                ModelState.AddModelError("error", errors);
+                TempData["error"] = errors;
             }
             
 
@@ -213,7 +212,7 @@ namespace SimulationGaragistes.Controllers
 
             if (eh.hasErrors())
             {
-                this.ModelState.AddModelError("error", eh.getErrors());
+                TempData["error"] = eh.getErrors();
                 return RedirectToAction("ConfigureVacances", new { id = vacance.garagiste_id });
             }
             return RedirectToAction("Index");

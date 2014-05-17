@@ -22,10 +22,11 @@ namespace SimulationGaragistes.Controllers
 
         //
         // GET: /Révisions/
+        /*
         public ActionResult Index()
         {
             return View(this._serviceR.findAll());
-        }
+        }*/
 
         [HttpGet]
         public ActionResult Insert(int id = 0)
@@ -51,16 +52,18 @@ namespace SimulationGaragistes.Controllers
             if (revision.id <= 0)
             {
                 this._serviceR.Insert(revision);
+                message = "La révision à bien été ajoutée.";
                 revision = new Révisions();
             }
             else
             {
+                message = "La révision à bien été modifiée";
                 this._serviceR.Edit(revision);
             }
 
             if (this._eh.hasErrors())
             {
-                ModelState.AddModelError("error",this._eh.getErrors());
+                TempData["error"] = this._eh.getErrors();
                 ViewBag.errors = this._eh.getErrors();
             }
             else

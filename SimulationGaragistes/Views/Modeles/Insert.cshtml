@@ -1,20 +1,37 @@
-﻿<h1>Ajouter un modèle</h1>
-
-@model SimulationGaragistes.ViewModels.VMModeles
+﻿@model SimulationGaragistes.ViewModels.VMModeles
 @Html.Partial("Menu")
-<div>
-    @TempData["success"]
+<div class=" col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Ajouter un Modèle</h1>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Insert", "Modeles", FormMethod.Post))
+            {
+                @Html.Hidden("id", Model.Modele.id)
+                @Html.Label("label_label", "Nom du modèle")
+                <div class="input-group">
+                    @Html.TextBox("label", Model.Modele.label, new { @class = "form-control" })
+                </div>
+                <br />
+                @Html.Label("label_marque", "Marque")
+                <div class="input-group">
+                    @Html.DropDownList("marque", Model.Marques,new { @class = "form-control" })
+                </div>
+                <br />
+                string mod = Model.Modele.id == 0 ? "Ajouter" : "Modifier";
+                <input type="submit" class="btn btn-default" value="@mod" />
+            }
+        </div>
+    </div>
 </div>
-@using (Html.BeginForm("Insert", "Modeles", FormMethod.Post))
-{
-    @Html.ValidationMessage("error")
-    @Html.Hidden("id", Model.Modele.id)
-    @Html.Label("label_label","Nom du modèle")
-    @Html.TextBox("label", Model.Modele.label)
-    <br />
-    @Html.Label("label_marque","Marque")
-    @Html.DropDownList("marque",Model.Marques)
-    <br />
-    string mod = Model.Modele.id == 0 ? "Ajouter" : "Modifier";
-    <input type="submit" value="@mod" />
-}
+<div class="col-md-2">
+    @if (TempData["success"] != null)
+    {
+        <p class="alert alert-success">@TempData["success"]</p>
+    }
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

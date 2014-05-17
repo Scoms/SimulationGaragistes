@@ -17,7 +17,6 @@ namespace SimulationGaragistesDAL.Model
         public Révisions()
         {
             this.Revisions_Garagistes = new HashSet<Revisions_Garagistes>();
-            this.Statistiques = new HashSet<Statistiques>();
         }
     
         public int id { get; set; }
@@ -28,6 +27,5 @@ namespace SimulationGaragistesDAL.Model
     
         public virtual Modeles Modeles { get; set; }
         public virtual ICollection<Revisions_Garagistes> Revisions_Garagistes { get; set; }
-        public virtual ICollection<Statistiques> Statistiques { get; set; }
     }
 }

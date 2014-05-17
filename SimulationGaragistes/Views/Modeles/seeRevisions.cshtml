@@ -1,52 +1,74 @@
 ﻿@model SimulationGaragistes.ViewModels.VMModeles
+@Html.Partial("Menu")
+<div class=" col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Liste des révision de @Model.marqueLabel - @Model.Modele.label</h1>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Révision</th>
+                    <th>KM</th>
+                    <th>Durée par défault</th>
+                    <th>Actions</th>
+                </tr>
+                @foreach (var item in Model.Modele.Révisions)
+                {
+                    <tr>
+                        <td>@item.label</td>
+                        <td>@item.km</td>
+                        <td>@item.defaultTime</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-default" href="@Url.Action("Insert", "Révisions", new { id = item.id })">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-danger" href="@Url.Action("Delete", "Révisions", new { id = item.id })">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
 
-<h1>Liste des révision de @Model.marqueLabel - @Model.Modele.label</h1>
+                @using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
+                {
+                    <tr>
+                        <input type="hidden" value="0" id="0" name="id" />
+                        <td>
+                            @Html.Hidden("modele_id", Model.Modele.id)
+                            @Html.TextBox("label", Model.Revision.label, new { @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.TextBox("km", Model.Revision.km == null ? 1 : Model.Revision.km, new { @class = "form-control" })
+                        </td>
+                        <td>
+                            @Html.TextBox("defaultTime", Model.Revision.defaultTime == 0 ? 1 : Model.Revision.defaultTime, new { @class = "form-control" })
+                        </td>
+                        @{
+                    Model.Revision.modele_id = Model.Modele.id;
+                        }
+                        <td>
+                            <input type="submit" value="Ajouter" class="btn btn-default" />
+                        </td>
+                        <td></td>
+                    </tr>
+                }
+            </table>
 
-<table class="table table-striped">
-    <tr>
-        <th>Révision</th>
-        <th>km</th>
-        <th>durée par défault</th>
-        <th></th>
-        <th></th>
-    </tr>
-    @foreach (var item in Model.Modele.Révisions)
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
     {
-        <tr>
-            <td>@item.label</td>
-            <td>@item.km</td>
-            <td>@item.defaultTime</td>
-            <td>@Html.ActionLink("modifier", "Insert", "Révisions", new { id = @item.id }, null)</td>
-            <td>@Html.ActionLink("supprimer", "Delete", "Révisions", new { id = @item.id }, null)</td>
-        </tr>
+        <p class="alert alert-success">@TempData["success"]</p>
     }
-
-    @using (Html.BeginForm("Insert", "Révisions", FormMethod.Post))
+    @if (TempData["error"] != null)
     {
-        <tr>
-            <input type="hidden" value="0" id="0" name="id" />
-            <td>
-                @Html.Hidden("modele_id", Model.Modele.id)
-                @Html.TextBox("label", Model.Revision.label, new { @class = "form-control" })
-            </td>
-            <td>
-                @Html.TextBox("km", Model.Revision.km == null ? 1 : Model.Revision.km, new { @class = "form-control" })
-            </td>
-            <td>
-                @Html.TextBox("defaultTime", Model.Revision.defaultTime == 0 ? 1 : Model.Revision.defaultTime, new { @class = "form-control" })
-            </td>
-                @{
-                Model.Revision.modele_id = Model.Modele.id;
-            }
-            <td>
-                <input type="submit" value="Ajouter" class="btn btn-default"/>
-            </td>
-            <td></td>
-        </tr>
+        <p class="alert alert-danger">    @TempData["error"]</p>
     }
-
-</table>
-
-
-
-@Html.ValidationMessage("error")
+</div>

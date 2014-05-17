@@ -214,6 +214,8 @@ namespace SimulationGaragistesDAL.Model
             vmInter.VMGaragiste = garagisteChoisi;
             vmInter.JoursArrets = garagisteChoisi.getProchaineDispo(indexJour).Heure == 1 ? garagisteChoisi.getProchaineDispo(indexJour).Jour - indexJour : 0;
             vmInter.Fin = garagisteChoisi.getProchaineDispo(indexJour);
+            stat.modele_id = this.modele.id;
+            stat.voiture = this.modele.label + " (" + this.id + ")";
             vmInter.Stat = stat;
             
             return vmInter;

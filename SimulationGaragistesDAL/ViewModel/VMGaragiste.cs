@@ -79,6 +79,9 @@ namespace SimulationGaragistesDAL.ViewModel
             stat = new Statistiques();
             stat.garagiste_id = this.Garagiste.id;
             stat.revision_id = revision.id;
+            stat.garagiste = this.ToString();
+            stat.revision = revision.label;
+            stat.km = (int)revision.km;
             
             
             int duree = revision.defaultTime;
@@ -89,6 +92,7 @@ namespace SimulationGaragistesDAL.ViewModel
                     duree = item.duree;
                 }
             }
+            stat.duree = duree;
             this.ProchaineDispo.maj(indexJour,duree,out debut,this);
         }
 

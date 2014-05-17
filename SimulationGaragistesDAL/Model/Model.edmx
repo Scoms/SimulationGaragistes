@@ -69,9 +69,16 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="revision_id" Type="int" />
+          <Property Name="revision_id" Type="int" Nullable="false" />
           <Property Name="garagiste_id" Type="int" Nullable="false" />
           <Property Name="simulation_id" Type="int" Nullable="false" />
+          <Property Name="duree" Type="int" />
+          <Property Name="voiture" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="revision" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="garagiste" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="modele_id" Type="int" Nullable="false" />
+          <Property Name="km" Type="int" Nullable="false" />
+          <Property Name="nbvacances" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Vacances">
           <Key>
@@ -123,7 +130,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Revisions_Garagistes_Révisions">
-          <End Role="Révisions" Type="Self.Révisions" Multiplicity="1" />
+          <End Role="Révisions" Type="Self.Révisions" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Revisions_Garagistes" Type="Self.Revisions_Garagistes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Révisions">
@@ -143,30 +152,6 @@
             </Principal>
             <Dependent Role="Révisions">
               <PropertyRef Name="modele_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Statistiques_Garagistes">
-          <End Role="Garagistes" Type="Self.Garagistes" Multiplicity="1" />
-          <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Garagistes">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Statistiques">
-              <PropertyRef Name="garagiste_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Statistiques_Révisions">
-          <End Role="Révisions" Type="Self.Révisions" Multiplicity="0..1" />
-          <End Role="Statistiques" Type="Self.Statistiques" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Révisions">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Statistiques">
-              <PropertyRef Name="revision_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -226,14 +211,6 @@
             <End Role="Modeles" EntitySet="Modeles" />
             <End Role="Révisions" EntitySet="Révisions" />
           </AssociationSet>
-          <AssociationSet Name="FK_Statistiques_Garagistes" Association="Self.FK_Statistiques_Garagistes">
-            <End Role="Garagistes" EntitySet="Garagistes" />
-            <End Role="Statistiques" EntitySet="Statistiques" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Statistiques_Révisions" Association="Self.FK_Statistiques_Révisions">
-            <End Role="Révisions" EntitySet="Révisions" />
-            <End Role="Statistiques" EntitySet="Statistiques" />
-          </AssociationSet>
           <AssociationSet Name="FK_Statistiques_Simulations" Association="Self.FK_Statistiques_Simulations">
             <End Role="Simulations" EntitySet="Simulations" />
             <End Role="Statistiques" EntitySet="Statistiques" />
@@ -247,65 +224,45 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SimulationGaragistesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Garagistes">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="franchise_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Franchises" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Garagistes" ToRole="Franchises" />
-          <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Garagistes" ToRole="Revisions_Garagistes" />
-          <NavigationProperty Name="Vacances" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Garagistes" ToRole="Vacances" />
-          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Garagistes" FromRole="Garagistes" ToRole="Statistiques" />
-        </EntityType>
         <EntityContainer Name="SimulationGaragistesEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Garagistes" EntityType="Self.Garagistes" />
           <EntitySet Name="Franchises" EntityType="SimulationGaragistesModel.Franchises" />
+          <EntitySet Name="Garagistes" EntityType="SimulationGaragistesModel.Garagistes" />
+          <EntitySet Name="Marques" EntityType="SimulationGaragistesModel.Marques" />
+          <EntitySet Name="Modeles" EntityType="SimulationGaragistesModel.Modeles" />
+          <EntitySet Name="Révisions" EntityType="SimulationGaragistesModel.Révisions" />
+          <EntitySet Name="Revisions_Garagistes" EntityType="SimulationGaragistesModel.Revisions_Garagistes" />
+          <EntitySet Name="Simulations" EntityType="SimulationGaragistesModel.Simulations" />
+          <EntitySet Name="Statistiques" EntityType="SimulationGaragistesModel.Statistiques" />
+          <EntitySet Name="Vacances" EntityType="SimulationGaragistesModel.Vacances" />
           <AssociationSet Name="FK_Garagistes_Franchise" Association="SimulationGaragistesModel.FK_Garagistes_Franchise">
             <End Role="Franchises" EntitySet="Franchises" />
             <End Role="Garagistes" EntitySet="Garagistes" />
           </AssociationSet>
-          <EntitySet Name="Marques" EntityType="SimulationGaragistesModel.Marques" />
-          <EntitySet Name="Modeles" EntityType="SimulationGaragistesModel.Modeles" />
+          <AssociationSet Name="FK_Revisions_Garagistes_Garagistes" Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Revisions_Garagistes" EntitySet="Revisions_Garagistes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Vacances_Garagistes" Association="SimulationGaragistesModel.FK_Vacances_Garagistes">
+            <End Role="Garagistes" EntitySet="Garagistes" />
+            <End Role="Vacances" EntitySet="Vacances" />
+          </AssociationSet>
           <AssociationSet Name="FK_Modeles_Marques" Association="SimulationGaragistesModel.FK_Modeles_Marques">
             <End Role="Marques" EntitySet="Marques" />
             <End Role="Modeles" EntitySet="Modeles" />
           </AssociationSet>
-          <EntitySet Name="Révisions" EntityType="SimulationGaragistesModel.Révisions" />
           <AssociationSet Name="FK_Révisions_Modeles" Association="SimulationGaragistesModel.FK_Révisions_Modeles">
             <End Role="Modeles" EntitySet="Modeles" />
             <End Role="Révisions" EntitySet="Révisions" />
-          </AssociationSet>
-          <EntitySet Name="Revisions_Garagistes" EntityType="SimulationGaragistesModel.Revisions_Garagistes" />
-          <AssociationSet Name="FK_Revisions_Garagistes_Garagistes" Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes">
-            <End Role="Garagistes" EntitySet="Garagistes" />
-            <End Role="Revisions_Garagistes" EntitySet="Revisions_Garagistes" />
           </AssociationSet>
           <AssociationSet Name="FK_Revisions_Garagistes_Révisions" Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions">
             <End Role="Révisions" EntitySet="Révisions" />
             <End Role="Revisions_Garagistes" EntitySet="Revisions_Garagistes" />
           </AssociationSet>
-          <EntitySet Name="Vacances" EntityType="SimulationGaragistesModel.Vacances" />
-          <AssociationSet Name="FK_Vacances_Garagistes" Association="SimulationGaragistesModel.FK_Vacances_Garagistes">
-            <End Role="Garagistes" EntitySet="Garagistes" />
-            <End Role="Vacances" EntitySet="Vacances" />
-          </AssociationSet>
-          <EntitySet Name="Simulations" EntityType="SimulationGaragistesModel.Simulations" />
-          <EntitySet Name="Statistiques" EntityType="SimulationGaragistesModel.Statistiques" />
-          <AssociationSet Name="FK_Statistiques_Garagistes" Association="SimulationGaragistesModel.FK_Statistiques_Garagistes">
-            <End Role="Garagistes" EntitySet="Garagistes" />
-            <End Role="Statistiques" EntitySet="Statistiques" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Statistiques_Révisions" Association="SimulationGaragistesModel.FK_Statistiques_Révisions">
-            <End Role="Révisions" EntitySet="Révisions" />
-            <End Role="Statistiques" EntitySet="Statistiques" />
-          </AssociationSet>
           <AssociationSet Name="FK_Statistiques_Simulations" Association="SimulationGaragistesModel.FK_Statistiques_Simulations">
             <End Role="Simulations" EntitySet="Simulations" />
             <End Role="Statistiques" EntitySet="Statistiques" />
           </AssociationSet>
-          </EntityContainer>
+        </EntityContainer>
         <EntityType Name="Franchises">
           <Key>
             <PropertyRef Name="id" />
@@ -314,18 +271,17 @@
           <Property Name="label" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Franchises" ToRole="Garagistes" />
         </EntityType>
-        <Association Name="FK_Garagistes_Franchise">
-          <End Type="SimulationGaragistesModel.Franchises" Role="Franchises" Multiplicity="1" />
-          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Franchises">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Garagistes">
-              <PropertyRef Name="franchise_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityType Name="Garagistes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="franchise_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Franchises" Relationship="SimulationGaragistesModel.FK_Garagistes_Franchise" FromRole="Garagistes" ToRole="Franchises" />
+          <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Garagistes" ToRole="Revisions_Garagistes" />
+          <NavigationProperty Name="Vacances" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Garagistes" ToRole="Vacances" />
+        </EntityType>
         <EntityType Name="Marques">
           <Key>
             <PropertyRef Name="id" />
@@ -344,6 +300,105 @@
           <NavigationProperty Name="Marques" Relationship="SimulationGaragistesModel.FK_Modeles_Marques" FromRole="Modeles" ToRole="Marques" />
           <NavigationProperty Name="Révisions" Relationship="SimulationGaragistesModel.FK_Révisions_Modeles" FromRole="Modeles" ToRole="Révisions" />
         </EntityType>
+        <EntityType Name="Révisions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="defaultTime" Type="Int32" Nullable="false" />
+          <Property Name="modele_id" Type="Int32" />
+          <Property Name="km" Type="Int32" />
+          <NavigationProperty Name="Modeles" Relationship="SimulationGaragistesModel.FK_Révisions_Modeles" FromRole="Révisions" ToRole="Modeles" />
+          <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" FromRole="Révisions" ToRole="Revisions_Garagistes" />
+        </EntityType>
+        <EntityType Name="Revisions_Garagistes">
+          <Key>
+            <PropertyRef Name="garagiste_id" />
+            <PropertyRef Name="revision_id" />
+          </Key>
+          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
+          <Property Name="revision_id" Type="Int32" Nullable="false" />
+          <Property Name="duree" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Revisions_Garagistes" ToRole="Garagistes" />
+          <NavigationProperty Name="Révisions" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" FromRole="Revisions_Garagistes" ToRole="Révisions" />
+        </EntityType>
+        <EntityType Name="Simulations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="duree" Type="Int32" />
+          <Property Name="debut" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Simulations" ToRole="Statistiques" />
+        </EntityType>
+        <EntityType Name="Statistiques">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="revision_id" Type="Int32" Nullable="false" />
+          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
+          <Property Name="simulation_id" Type="Int32" Nullable="false" />
+          <Property Name="duree" Type="Int32" />
+          <Property Name="voiture" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="revision" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="garagiste" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Simulations" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Statistiques" ToRole="Simulations" />
+          <Property Name="modele_id" Type="Int32" Nullable="false" />
+          <Property Name="km" Type="Int32" Nullable="false" />
+          <Property Name="nbvacances" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vacances">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="debut" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="fin" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Vacances" ToRole="Garagistes" />
+        </EntityType>
+        <Association Name="FK_Garagistes_Franchise">
+          <End Type="SimulationGaragistesModel.Franchises" Role="Franchises" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Franchises">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Garagistes">
+              <PropertyRef Name="franchise_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Revisions_Garagistes_Garagistes">
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Revisions_Garagistes" Role="Revisions_Garagistes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Revisions_Garagistes">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Vacances_Garagistes">
+          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Vacances" Role="Vacances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Garagistes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Vacances">
+              <PropertyRef Name="garagiste_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Modeles_Marques">
           <End Type="SimulationGaragistesModel.Marques" Role="Marques" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -358,19 +413,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Révisions">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="label" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="defaultTime" Type="Int32" Nullable="false" />
-          <Property Name="modele_id" Type="Int32" />
-          <NavigationProperty Name="Modeles" Relationship="SimulationGaragistesModel.FK_Révisions_Modeles" FromRole="Révisions" ToRole="Modeles" />
-          <Property Name="km" Type="Int32" />
-          <NavigationProperty Name="Revisions_Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" FromRole="Révisions" ToRole="Revisions_Garagistes" />
-          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Révisions" FromRole="Révisions" ToRole="Statistiques" />
-        </EntityType>
         <Association Name="FK_Révisions_Modeles">
           <End Type="SimulationGaragistesModel.Modeles" Role="Modeles" Multiplicity="0..1" />
           <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="*" />
@@ -383,112 +425,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Revisions_Garagistes">
-          <Key>
-            <PropertyRef Name="garagiste_id" />
-            <PropertyRef Name="revision_id" />
-          </Key>
-          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
-          <Property Name="revision_id" Type="Int32" Nullable="false" />
-          <Property Name="duree" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" FromRole="Revisions_Garagistes" ToRole="Garagistes" />
-          <NavigationProperty Name="Révisions" Relationship="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" FromRole="Revisions_Garagistes" ToRole="Révisions" />
-        </EntityType>
-        <Association Name="FK_Revisions_Garagistes_Garagistes">
-          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
-          <End Type="SimulationGaragistesModel.Revisions_Garagistes" Role="Revisions_Garagistes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Garagistes">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Revisions_Garagistes">
-              <PropertyRef Name="garagiste_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Revisions_Garagistes_Révisions">
-          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="SimulationGaragistesModel.Revisions_Garagistes" Role="Revisions_Garagistes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Révisions">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Revisions_Garagistes">
-              <PropertyRef Name="revision_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Vacances">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="debut" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="fin" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Vacances_Garagistes" FromRole="Vacances" ToRole="Garagistes" />
-        </EntityType>
-        <Association Name="FK_Vacances_Garagistes">
-          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
-          <End Type="SimulationGaragistesModel.Vacances" Role="Vacances" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Garagistes">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Vacances">
-              <PropertyRef Name="garagiste_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Simulations">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nom" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Statistiques" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Simulations" ToRole="Statistiques" />
-          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="duree" Type="Int32" />
-          <Property Name="debut" Type="DateTime" Precision="0" />
-        </EntityType>
-        <EntityType Name="Statistiques">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="revision_id" Type="Int32" />
-          <Property Name="garagiste_id" Type="Int32" Nullable="false" />
-          <Property Name="simulation_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Garagistes" Relationship="SimulationGaragistesModel.FK_Statistiques_Garagistes" FromRole="Statistiques" ToRole="Garagistes" />
-          <NavigationProperty Name="Révisions" Relationship="SimulationGaragistesModel.FK_Statistiques_Révisions" FromRole="Statistiques" ToRole="Révisions" />
-          <NavigationProperty Name="Simulations" Relationship="SimulationGaragistesModel.FK_Statistiques_Simulations" FromRole="Statistiques" ToRole="Simulations" />
-        </EntityType>
-        <Association Name="FK_Statistiques_Garagistes">
-          <End Type="SimulationGaragistesModel.Garagistes" Role="Garagistes" Multiplicity="1" />
-          <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Garagistes">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Statistiques">
-              <PropertyRef Name="garagiste_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Statistiques_Révisions">
-          <End Type="SimulationGaragistesModel.Révisions" Role="Révisions" Multiplicity="0..1" />
-          <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Révisions">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Statistiques">
               <PropertyRef Name="revision_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Statistiques_Simulations">
-          <End Type="SimulationGaragistesModel.Simulations" Role="Simulations" Multiplicity="1" />
+          <End Type="SimulationGaragistesModel.Simulations" Role="Simulations" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="SimulationGaragistesModel.Statistiques" Role="Statistiques" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Simulations">
@@ -505,19 +459,19 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="SimulationGaragistesModelStoreContainer" CdmEntityContainer="SimulationGaragistesEntities">
-          <EntitySetMapping Name="Garagistes">
-            <EntityTypeMapping TypeName="SimulationGaragistesModel.Garagistes">
-              <MappingFragment StoreEntitySet="Garagistes">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="nom" ColumnName="nom" />
-                <ScalarProperty Name="franchise_id" ColumnName="franchise_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Franchises">
             <EntityTypeMapping TypeName="SimulationGaragistesModel.Franchises">
               <MappingFragment StoreEntitySet="Franchises">
                 <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Garagistes">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Garagistes">
+              <MappingFragment StoreEntitySet="Garagistes">
+                <ScalarProperty Name="franchise_id" ColumnName="franchise_id" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -559,16 +513,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Vacances">
-            <EntityTypeMapping TypeName="SimulationGaragistesModel.Vacances">
-              <MappingFragment StoreEntitySet="Vacances">
-                <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
-                <ScalarProperty Name="fin" ColumnName="fin" />
-                <ScalarProperty Name="debut" ColumnName="debut" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Simulations">
             <EntityTypeMapping TypeName="SimulationGaragistesModel.Simulations">
               <MappingFragment StoreEntitySet="Simulations">
@@ -583,9 +527,26 @@
           <EntitySetMapping Name="Statistiques">
             <EntityTypeMapping TypeName="SimulationGaragistesModel.Statistiques">
               <MappingFragment StoreEntitySet="Statistiques">
+                <ScalarProperty Name="nbvacances" ColumnName="nbvacances" />
+                <ScalarProperty Name="km" ColumnName="km" />
+                <ScalarProperty Name="modele_id" ColumnName="modele_id" />
+                <ScalarProperty Name="garagiste" ColumnName="garagiste" />
+                <ScalarProperty Name="revision" ColumnName="revision" />
+                <ScalarProperty Name="voiture" ColumnName="voiture" />
+                <ScalarProperty Name="duree" ColumnName="duree" />
                 <ScalarProperty Name="simulation_id" ColumnName="simulation_id" />
                 <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
                 <ScalarProperty Name="revision_id" ColumnName="revision_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vacances">
+            <EntityTypeMapping TypeName="SimulationGaragistesModel.Vacances">
+              <MappingFragment StoreEntitySet="Vacances">
+                <ScalarProperty Name="garagiste_id" ColumnName="garagiste_id" />
+                <ScalarProperty Name="fin" ColumnName="fin" />
+                <ScalarProperty Name="debut" ColumnName="debut" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

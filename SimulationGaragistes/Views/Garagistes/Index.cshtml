@@ -1,44 +1,55 @@
-﻿<h1>Listes des garagistes</h1>
-
+﻿
 @model List<SimulationGaragistesDAL.Model.Garagistes>
 @Html.Partial("Menu")
 
-<p>@TempData["success"]</p>
-<table class="table table-striped">
-    <tr>
-        <th>Nom</th>
-        <th>Franchise</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    @foreach (SimulationGaragistesDAL.Model.Garagistes garagiste in Model)
+<div class="col-md-8">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Listes des garagistes</h1>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tr>
+                    <th>Nom</th>
+                    <th>Franchise</th>
+                    <th>Actions</th>
+                </tr>
+                @foreach (SimulationGaragistesDAL.Model.Garagistes garagiste in Model)
+                {
+                    <tr>
+                        <td>@garagiste.nom</td>
+                        <td>@garagiste.Franchises.label</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-default"  href="@Url.Action("Insert", "Garagistes", new { id = garagiste.id })">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                                <a class="btn btn-default"  href="@Url.Action("ConfigureRevisions", "Garagistes", new { id = garagiste.id })">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </a>
+                                <a class="btn btn-default" href="@Url.Action("ConfigureVacances", "Garagistes", new { id = garagiste.id })">
+                                    <span class="glyphicon glyphicon-plane"></span>
+                                </a>
+                            </div>
+                            <div class="btn-group">
+                                <a class="btn btn-danger" href="@Url.Action("Delete", "Garagistes", new { id = garagiste.id })">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-md-2">
+    @if (TempData["success"] != null)
     {
-        <tr>
-            <td>@garagiste.nom</td>
-            <td>@garagiste.Franchises.label</td>
-            <td>
-                @Html.ActionLink("modifier", "Insert", "Garagistes", new
-           {
-               id = garagiste.id
-           }, null)
-            </td>
-            <td>
-                @Html.ActionLink("supprimer", "Delete", "Garagistes", new
-               {
-                   id = garagiste.id
-               }, null)
-            </td>
-            <td>
-                @Html.ActionLink("configurer révisions", "ConfigureRevisions", "Garagistes", new
-               {
-                   id = garagiste.id
-               }, null)
-            </td>
-            <td>
-                @Html.ActionLink("configurer vacances", "ConfigureVacances", "Garagistes", new { id = garagiste.id }, null)
-            </td>
-        </tr>
+        <p class="alert alert-success">@TempData["success"]</p>
     }
-</table>
+    @if (TempData["error"] != null)
+    {
+        <p class="alert alert-danger">    @TempData["error"]</p>
+    }
+</div>

@@ -5,25 +5,23 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="6637eafe5800414cbc8aa2106fc68815" Name="Diagram1" ZoomLevel="63">
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Garagistes" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Franchises" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Franchises" Width="1.5" PointX="0.75" PointY="2.625" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Garagistes" Width="1.5" PointX="3" PointY="2.375" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Marques" Width="1.5" PointX="1.5" PointY="10.625" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Modeles" Width="1.5" PointX="0.75" PointY="7.375" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Révisions" Width="1.5" PointX="3" PointY="7.25" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Revisions_Garagistes" Width="1.5" PointX="5.25" PointY="2.375" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Simulations" Width="1.5" PointX="7.75" PointY="1.25" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Statistiques" Width="1.5" PointX="10" PointY="1" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Vacances" Width="1.5" PointX="5.25" PointY="5.125" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Garagistes_Franchise" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Marques" Width="1.5" PointX="0.75" PointY="4" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Modeles" Width="1.5" PointX="3" PointY="3.875" />
-        <AssociationConnector Association="SimulationGaragistesModel.FK_Modeles_Marques" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Révisions" Width="1.5" PointX="5.75" PointY="3.875" />
-        <AssociationConnector Association="SimulationGaragistesModel.FK_Révisions_Modeles" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Revisions_Garagistes" Width="1.5" PointX="8" PointY="2.625" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" />
-        <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Vacances" Width="1.5" PointX="5.25" PointY="1" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Vacances_Garagistes" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Simulations" Width="1.5" PointX="7.5" PointY="9.625" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Statistiques" Width="1.5" PointX="9.75" PointY="1.375" />
-        <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Garagistes" />
-        <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Révisions" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Modeles_Marques" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Révisions_Modeles" />
+        <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Révisions" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Statistiques_Simulations" />
-        </Diagram>
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
