@@ -1,5 +1,5 @@
 ﻿@model List<SimulationGaragistesDAL.Model.Révisions>
-@Html.Partial("Menu")
+@Html.Partial("MenuAleatoire")
 
 <div class="col-md-8">
     <div class="panel panel-info">
@@ -12,7 +12,6 @@
                     <th>Révision</th>
                     <th>Durée par défault (en heure)</th>
                     <th></th>
-                    <th></th>
                 </tr>
                 @{
                     foreach (var item in Model)
@@ -22,7 +21,7 @@
                             <td>@item.defaultTime</td>
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-default" href="@Url.Action("Insert", "Révisions", new { id = item.id })">
+                                    <a class="btn btn-default" href="@Url.Action("InsertAleatoire", "Révisions", new { id = item.id })">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
                                 </div>
@@ -46,6 +45,6 @@
     }
     @if (TempData["error"] != null)
     {
-        <p class="alert alert-danger">    @TempData["error"]</p>
+        <p class="alert alert-danger">    @TempData["errors"]</p>
     }
 </div>

@@ -22,7 +22,7 @@
                                 <td>@item.label </td>
                                 <td>@item.km</td>
                                 <td>@Html.TextBox("duree" + @item.id, @item.defaultTime)</td>
-                                <td><a id=@( @item.id) onclick="clicked(@item.id,@Model.idGaragiste)">Changer durée</a></td>
+                                <td><a class="btn btn-default" id=@( @item.id) onclick="clicked(@item.id,@Model.idGaragiste)">Changer durée</a></td>
                             </tr>
                         }
                     }
