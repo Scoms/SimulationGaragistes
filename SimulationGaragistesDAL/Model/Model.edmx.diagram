@@ -9,11 +9,11 @@
         <EntityTypeShape EntityType="SimulationGaragistesModel.Garagistes" Width="1.5" PointX="3" PointY="2.375" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Marques" Width="1.5" PointX="1.5" PointY="10.625" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Modeles" Width="1.5" PointX="0.75" PointY="7.375" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Révisions" Width="1.5" PointX="3" PointY="7.25" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Révisions" Width="1.5" PointX="5.375" PointY="5.875" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Revisions_Garagistes" Width="1.5" PointX="5.25" PointY="2.375" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Simulations" Width="1.5" PointX="7.75" PointY="1.25" />
         <EntityTypeShape EntityType="SimulationGaragistesModel.Statistiques" Width="1.5" PointX="10" PointY="1" />
-        <EntityTypeShape EntityType="SimulationGaragistesModel.Vacances" Width="1.5" PointX="5.25" PointY="5.125" />
+        <EntityTypeShape EntityType="SimulationGaragistesModel.Vacances" Width="1.5" PointX="1.875" PointY="5" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Garagistes_Franchise" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Revisions_Garagistes_Garagistes" />
         <AssociationConnector Association="SimulationGaragistesModel.FK_Vacances_Garagistes" />

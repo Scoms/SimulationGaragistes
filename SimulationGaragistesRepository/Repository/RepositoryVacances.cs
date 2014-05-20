@@ -38,7 +38,7 @@ namespace SimulationGaragistesRepository.Repository
                     }
                     if (obj.debut <= item.debut && item.debut <= obj.fin)
                     {
-                        this._eh.addError("Les vacances spécifiées en englode d'autres");
+                        this._eh.addError("Les vacances spécifiées en englobe d'autres");
                     }
                     if (obj.debut >= obj.fin)
                     {

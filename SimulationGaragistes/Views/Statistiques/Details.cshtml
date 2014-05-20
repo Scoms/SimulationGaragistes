@@ -107,6 +107,14 @@
                     }
                 </table>
             </div>
+            @foreach (var item in Model.Simulation.Statistiques.Where(s => s.revision_id == -1))
+            {
+                if (Model.Simulation.Statistiques.Where(s => s.garagiste_id == item.garagiste_id).Count() == 1)
+                {
+                   <p>@item.garagiste n'a pas travaillé</p>
+                }
+            }
+
         </div>
     </div>
 </div>

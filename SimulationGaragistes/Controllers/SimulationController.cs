@@ -77,7 +77,13 @@ namespace SimulationGaragistes.Controllers
                 {
                     int[] row = new int[2];
                     row[0] = int.Parse(item.Substring(sModele.Length, item.Length - sModele.Length));
-                    row[1] = int.Parse(val);
+                    try
+                    {
+                        row[1] = int.Parse(val);
+                    }
+                    catch(Exception ex){
+                        row[1] = 0;
+                    }
                     if (row[1] >= 0)
                         modelesQuantity.Add(row);
                 }
