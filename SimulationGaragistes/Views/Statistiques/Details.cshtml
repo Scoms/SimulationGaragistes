@@ -5,94 +5,108 @@
     SimlulationGaragistesService.Service.ServiceRévisions serviceRev = new SimlulationGaragistesService.Service.ServiceRévisions(eh);
             
 }
+<div class="row">
 
-<table class="table table-striped">
-    <tr>
-        <th>
-            Garagiste
-        </th>
-        <th>
-            Révision
-        </th>
-        <th>
-            Nombre
-        </th>
-    </tr>
-
-    @{
-        SimulationGaragistesDAL.Model.Statistiques prevItem = new SimulationGaragistesDAL.Model.Statistiques();   
-       foreach (var item in Model.Simulation.Statistiques.OrderBy(s => s.garagiste_id).ThenBy(s => s.revision_id))
-        {
-            if (item.revision_id != -1)
-            {
-                if (item.revision_id != prevItem.revision_id || item.garagiste_id != prevItem.garagiste_id)
-                {
-                    <tr>
-                    <td>
-                        @if (item.garagiste_id != prevItem.garagiste_id)
-                        {
-                            string res =  item.garagiste;
-                            <div>@res</div>
-                        }
-                    </td>
-                    <td>
-                        @item.revision @(item.km == 0 ? "(aléatoire)" : item.km.ToString())
-                    </td>
-                    <td>
-                        @Model.Simulation.Statistiques.Where(s => s.revision_id == item.revision_id && s.garagiste_id == item.garagiste_id).Count()
-                    </td>
-                      </tr>  
-                }
-                prevItem = item;
-            }
-        }   
-    }
-
-</table>
-<p>
-    Durée de la simulation : @Model.Simulation.duree
-    
-    <table class="table">
-        <tr>
-            <th>
-                Garagiste
-            </th>
-            <th>
-                Interventions
-            </th>
-            <th>
-                Durée totale
-            </th>
-            <th>
-                Heures disponibles
-            </th>
-            <th>
-                Occupation
-            </th>
-        </tr>
-
-        @foreach (var item in Model.Occupations)
-        {
+    <div class="col-md-offset-2 col-md-8">
+        <table class="table ">
             <tr>
-                <td>
-                    @item.Garagiste
-                </td>
-                <td>
-                    @item.Interventions
-                </td>
-                <td>
-                    @item.DureeTotal
-                </td>
-                <td>
-                    @(item.JourTravailles * 8 - item.DureeTotal)
-                </td>
-
-                <td>
-                    @{
-                        double occup = (item.DureeTotal * 100 / (item.JourTravailles * 8));
-                    }
-                    @occup %
-                </td>
+                <th>
+                    Garagiste
+                </th>
+                <th>
+                    Révision
+                </th>
+                <th>
+                    Nombre
+                </th>
             </tr>
-        }
-    </table>
+            @{
+                SimulationGaragistesDAL.Model.Statistiques prevItem = new SimulationGaragistesDAL.Model.Statistiques();
+                foreach (var item in Model.Simulation.Statistiques.OrderBy(s => s.garagiste_id).ThenBy(s => s.revision_id))
+                {
+                    if (item.revision_id != -1)
+                    {
+                        if (item.revision_id != prevItem.revision_id || item.garagiste_id != prevItem.garagiste_id)
+                        {
+                            string classe = item.garagiste_id != prevItem.garagiste_id ? "success" : String.Empty;
+                            <tr class="@classe">
+                                <td>
+                                    @if (item.garagiste_id != prevItem.garagiste_id)
+                                    {
+                                        string res = item.garagiste;
+                                        <div>@res</div>
+                                    }
+                                </td>
+                                <td>
+                                    @item.revision @(item.km == 0 ? "(aléatoire)" : item.km.ToString())
+                                </td>
+                                <td>
+                                    @Model.Simulation.Statistiques.Where(s => s.revision_id == item.revision_id && s.garagiste_id == item.garagiste_id).Count()
+                                </td>
+                            </tr>
+                        }
+                        prevItem = item;
+                    }
+                }
+            }
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-offset-1 col-md-10">
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>
+                    Durée de la simulation : @Model.Simulation.duree
+                </h2>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>
+                            Garagiste
+                        </th>
+                        <th>
+                            Interventions
+                        </th>
+                        <th>
+                            Durée totale
+                        </th>
+                        <th>
+                            Heures disponibles
+                        </th>
+                        <th>
+                            Occupation
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model.Occupations)
+                    {
+                        <tr>
+                            <td>
+                                @item.Garagiste
+                            </td>
+                            <td>
+                                @item.Interventions
+                            </td>
+                            <td>
+                                @item.DureeTotal
+                            </td>
+                            <td>
+                                @(item.JourTravailles * 8 - item.DureeTotal)
+                            </td>
+
+                            <td>
+                                @{
+                        double occup = (item.DureeTotal * 100 / (item.JourTravailles * 8));
+                                }
+                                @occup %
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

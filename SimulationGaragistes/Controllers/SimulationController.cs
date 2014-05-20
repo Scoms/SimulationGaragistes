@@ -206,7 +206,7 @@ namespace SimulationGaragistes.Controllers
                         {
                             VMGaragiste vmGara = new VMGaragiste(serviceGar.findById(stat.garagiste_id));
                             vmGara.activerVacances(vmSimuData.debut,vmSimuData.nbJours);
-                            stat.nbvacances = vmGara.IndexVacances.Where(v => v > 0 && v <= vmSimuData.nbJours).Count();
+                            stat.nbvacances = vmGara.IndexVacances.Distinct().Where(v => v > 0 && v <= vmSimuData.nbJours).Count();
                             lStats.Add(stat);
                         }
                 }

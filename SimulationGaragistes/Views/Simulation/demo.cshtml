@@ -1,24 +1,31 @@
 ﻿@model System.Collections.Generic.List<SimulationGaragistes.ViewModels.VMSimulationData.DayRepport>
-
+@{
+    int i = -1;
+}
 <div id="dayRepport">
-    @{
-        foreach (var item in Model)
-        {
-           
-            var french = new System.Globalization.CultureInfo("FR-fr");
-            var info = french.DateTimeFormat;
-            foreach (var dayName in info.DayNames)
-            {
-                // dimanche, lundi etc
-                Console.WriteLine(dayName);
+    @foreach (var item in Model)
+    {
+        <div class="panel panel-default col-md-offset-3 col-md-6">
+            @{
+                var french = new System.Globalization.CultureInfo("FR-fr");
+                var info = french.DateTimeFormat;
+                foreach (var dayName in info.DayNames)
+                {
+                    // dimanche, lundi etc
+                    Console.WriteLine(dayName);
+                }
+                string jourSemaine = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(item.jour.AddDays(item.indexJour - 1).DayOfWeek);
+                
             }
-            string jourSemaine = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(item.jour.AddDays(item.indexJour - 1).DayOfWeek);
-            <h2>@item.jour.AddDays(item.indexJour -1).ToShortDateString() (Jour @item.indexJour - @jourSemaine)</h2>
-
-            foreach (var evenement in item.evenements)
-            {
-                <p>@evenement</p>
-            }
-        }
+            <div class="panel-heading">
+                <h2>@item.jour.AddDays(item.indexJour - 1).ToShortDateString() (Jour @item.indexJour - @jourSemaine)</h2>
+            </div>
+            <div class="panel-body">
+                @foreach (var evenement in item.evenements)
+                {
+                    <p>@evenement</p>
+                }
+            </div>
+        </div>
     }
 </div>

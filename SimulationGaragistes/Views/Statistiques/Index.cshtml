@@ -1,39 +1,44 @@
 ﻿@model IEnumerable<SimulationGaragistesDAL.Model.Simulations>
 
-<table class="table table-striped">
-    <tr>
-        <th>
-            Simulation
-        </th>
-        <th>
-            Fichier
-        </th>
-        <th>
-            Date
-        </th>
-    </tr>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h1>Statistiques</h1>
+    </div>
+    <div class="panel-body">
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(@item.nom, "Details", new { id = item.id }, null)
-            </td>
-            <td>
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    Simulation
+                </th>
+                <th>
+                    Fichier
+                </th>
+                <th>
+                    Date
+                </th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(@item.nom, "Details", new { id = item.id }, null)
+                    </td>
+                    <td>
 
-                @{
-        String rootPath = Server.MapPath("~/Logs/");
-        String path = (rootPath + item.nom);
-        string src = path;
-        src = "/Logs/" + item.nom + ".txt";
-                }     
-                <a href="@(src)">fichier</a>
-            </td>
-            <td>
-                @item.created
-            </td>
-        </tr>
-    }
-
-</table>
-
+                        @{
+                String rootPath = Server.MapPath("~/Logs/");
+                String path = (rootPath + item.nom);
+                string src = path;
+                src = "/Logs/" + item.nom + ".txt";
+                        }
+                        <a href="@(src)">fichier</a>
+                    </td>
+                    <td>
+                        @item.created
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
